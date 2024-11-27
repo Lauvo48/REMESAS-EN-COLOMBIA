@@ -1,0 +1,176 @@
+---
+title: "Métodos de Holt-Winters y Suavizamiento"
+output: bookdown::html_document2
+---
+
+
+```{r include=FALSE}
+library(TSA)
+library(aTSA)
+library(forecast)
+library(tseries)
+```
+
+## Metodología
+
+Para el análisis de estacionariedad y ajuste de modelos lineales, se realizó el siguiente proceso:
+
+1. Análisis exploratorio de la serie temporal
+2. Verificación de estacionariedad
+3. Transformaciones necesarias para lograr estacionariedad
+4. Ajuste de modelos ARIMA (Autoregressive Integrated Moving Average)
+5. Validación de residuales
+6. Generación de pronósticos
+
+### Análisis Exploratorio de la Serie
+
+El análisis inicial de la serie temporal revela sus características fundamentales y patrones de comportamiento:
+
+```{r, fig.path="figure-html/", fig.width=7, fig.height=5}
+# Visualización inicial de la serie
+plot(ts_remesas_mensual, main = "Serie Original de Remesas",
+     xlab = "Tiempo", ylab = "Remesas (millones)",
+     col = "darkblue")
+
+```
+
+La serie muestra un crecimiento sostenido en las remesas desde el año 2000, con fluctuaciones estacionales marcadas. Los picos recurrentes sugieren patrones anuales consistentes, mientras que las fluctuaciones tienden a incrementarse a medida que la tendencia aumenta.
+
+## Verificación y Transformación para Estacionariedad
+
+```{r}
+# Test de Dickey-Fuller Aumentado para estacionariedad
+adf.test(ts_remesas_mensual)
+
+# Transformación logarítmica y diferenciación
+log_remesas <- log(ts_remesas_mensual + 1)  # Evitar valores log(0)
+diff_log_remesas <- diff(log_remesas)
+
+# Verificar estacionariedad después de transformación
+adf.test(diff_log_remesas)
+
+```
+Los resultados de la prueba de Dickey-Fuller Aumentada (ADF) indican que la serie original de remesas mensuales no es estacionaria, con un estadístico de -1.6215 y un p-valor de 0.7344, lo que impide rechazar la hipótesis nula de no estacionariedad. Sin embargo, tras aplicar una transformación logarítmica y diferenciación, la serie transformada (diff_log_remesas) muestra un estadístico de -6.8601 y un p-valor menor a 0.01, confirmando su estacionariedad. Esto implica que las remesas necesitan transformaciones para estabilizar su media y varianza antes de proceder con el modelado.
+
+
+## Modelo ARIMA
+
+```{r}
+# Ajuste automático del modelo ARIMA
+modelo_arima_remesas <- auto.arima(ts_remesas_mensual)
+
+# Resumen del modelo ajustado
+summary(modelo_arima_remesas)
+
+```
+El modelo ARIMA(0,1,4) ajustado a la serie de remesas mensuales incluye un componente de media móvil de orden 4 (MA(4)) y una diferenciación de primer orden para garantizar la estacionariedad de la serie. Los coeficientes estimados de los términos MA muestran que los rezagos inmediatos (MA1 y MA2) tienen una influencia significativa, especialmente el primer rezago (MA1: -0.6243), lo que indica que las fluctuaciones recientes tienen un impacto notable en la dinámica de la serie. El término de "drift" (2.4766) sugiere un aumento promedio en las remesas tras la diferenciación, capturando la tendencia de crecimiento a largo plazo.
+
+En cuanto a las métricas de ajuste, el error cuadrático medio (RMSE) de 35.14 millones y el error absoluto medio (MAE) de 26.00 millones reflejan un desempeño razonable del modelo, considerando la variabilidad de la serie. La media del error (ME: -0.0275) cercana a cero indica que el modelo no tiene un sesgo significativo en las predicciones. Además, el porcentaje absoluto medio del error (MAPE: 7.60%) muestra que el modelo puede predecir con una precisión aceptable, aunque el valor sugiere cierta variabilidad en los datos.
+
+## Validación de modelos
+
+```{r, fig.path="figure-html/", fig.width=7, fig.height=5}
+# Análisis de residuales
+residuales_remesas <- residuals(modelo_arima_remesas)
+
+# Gráficos diagnósticos
+par(mfrow = c(2, 2))
+
+# 1. Residuales vs Tiempo
+plot(residuales_remesas, type = 'l',
+     main = 'Residuales vs Tiempo',
+     ylab = 'Residuales', xlab = 'Tiempo')
+abline(h = 0, col = 'red')
+
+# 2. Gráfico Q-Q
+qqnorm(residuales_remesas)
+qqline(residuales_remesas)
+
+# 3. ACF de Residuales
+acf(residuales_remesas, main = 'ACF de Residuales')
+
+# 4. PACF de Residuales
+pacf(residuales_remesas, main = 'PACF de Residuales')
+
+par(mfrow = c(1, 1))
+
+# Tests de validación
+# Test de normalidad
+shapiro_test <- shapiro.test(sample(residuales_remesas, min(5000, length(residuales_remesas))))
+print("Test de Shapiro-Wilk para normalidad:")
+print(shapiro_test)
+
+# Test de independencia
+box_test <- Box.test(residuales_remesas, type = "Ljung-Box", lag = 20)
+print("Test de Ljung-Box para independencia:")
+print(box_test)
+
+```
+
+El gráfico de Residuales vs Tiempo muestra que los residuos oscilan de manera uniforme alrededor de cero, sin tendencia ni patrones aparentes, lo que sugiere que el modelo ha capturado adecuadamente la estructura de la serie temporal. Esto indica que los residuos se comportan como ruido aleatorio, cumpliendo uno de los supuestos fundamentales para un modelo ARIMA bien ajustado.
+
+El gráfico Q-Q revela desviaciones en las colas, con residuales extremos que no se ajustan a la línea teórica de una distribución normal. Esto implica que los residuos no siguen completamente una distribución normal, lo que es común en series temporales económicas como las remesas, donde factores atípicos pueden influir en la variabilidad.
+
+La ACF de los residuales no presenta correlaciones significativas fuera de las bandas de confianza, lo que sugiere que los residuos son independientes. De manera similar, la PACF tampoco muestra correlaciones significativas en ningún rezago, confirmando la ausencia de estructura autocorrelativa en los residuos. Este comportamiento sugiere que el modelo ARIMA ajustado captura adecuadamente la dependencia temporal en los datos.
+
+### Análisis de los Tests de Validación
+
+El **test de Shapiro-Wilk para normalidad** arroja un estadístico \(W = 0.9663\) y un p-valor de \(0.000214\), indicando que se rechaza la hipótesis nula de normalidad de los residuos. Esto refuerza lo observado en el gráfico Q-Q, donde las colas de los residuos muestran desviaciones significativas de la distribución normal.
+
+El **test de Ljung-Box para independencia** produce un estadístico \(X^2 = 18.575\) con un p-valor de \(0.5496\). Esto sugiere que no se puede rechazar la hipótesis nula de independencia, lo que confirma que los residuos del modelo no están autocorrelacionados. Este resultado respalda la validez del modelo para el análisis y predicción de las remesas, ya que la independencia de los residuos es un criterio clave para la evaluación del ajuste del modelo.
+
+En conclusión, aunque los residuos no cumplen estrictamente con la normalidad, son independientes y no muestran patrones temporales significativos, lo que indica que el modelo ARIMA es adecuado para este conjunto de datos y puede generar predicciones confiables.
+
+```{r, fig.path="figure-html/", fig.width=7, fig.height=5}
+# Generar pronósticos
+pronostico_remesas <- forecast::forecast(modelo_arima_remesas, h = 12)
+
+# Visualización de pronósticos
+plot(pronostico_remesas,
+     main = "Pronóstico de Remesas Mensuales",
+     xlab = "Tiempo",
+     ylab = "Remesas (millones)",
+     fcol = "red", shadecols = c("gray80", "gray90"))
+grid()
+
+# Mostrar valores de pronóstico
+print(pronostico_remesas)
+
+```
+
+El pronóstico de remesas mensuales generado por el modelo ARIMA muestra una proyección consistente con la tendencia y estacionalidad observadas en los datos históricos. Los valores pronosticados reflejan un crecimiento sostenido, alineado con el comportamiento general de la serie, mientras que las bandas de confianza alrededor del pronóstico, que se ensanchan progresivamente, indican una mayor incertidumbre para horizontes temporales más lejanos. Esta ampliación es característica de modelos estadísticos que capturan tanto la variabilidad histórica como la posible dispersión futura de los datos. En general, el modelo proporciona una herramienta confiable para realizar estimaciones de corto plazo, especialmente en contextos de planificación económica, aunque se recomienda considerar los intervalos de confianza al interpretar los resultados.
+
+### Evaluación del Modelo
+
+```{r}
+# Métricas de precisión
+accuracy(modelo_arima_remesas)
+
+# Validación en datos de prueba (últimos 12 meses)
+n <- length(ts_remesas_mensual)
+train <- subset(ts_remesas_mensual, end = n - 12)
+test <- subset(ts_remesas_mensual, start = n - 11)
+
+# Ajuste en conjunto de entrenamiento
+modelo_test_remesas <- auto.arima(train)
+forecast_test_remesas <- forecast::forecast(modelo_test_remesas, h = 12)
+
+# Cálculo del error de predicción
+error_pred <- test - forecast_test_remesas$mean
+print("Error Medio Absoluto de Predicción:")
+print(mean(abs(error_pred)))
+
+```
+El análisis del modelo ARIMA(0,1,4) con drift ajustado a las remesas mensuales muestra que el modelo captura adecuadamente la tendencia y estructura de los datos. La prueba de Dickey-Fuller Aumentada confirma que la serie original no es estacionaria, pero la serie transformada (diferenciada y logarítmica) cumple con los requisitos de estacionariedad. Los coeficientes del modelo indican que los rezagos más cercanos tienen un impacto significativo, y el término de drift captura el crecimiento promedio en las remesas. Los diagnósticos de los residuales reflejan independencia (p-valor = 0.5496 en el test de Ljung-Box), aunque la prueba de Shapiro-Wilk (p-valor = 0.000214) indica que no siguen una distribución estrictamente normal. En cuanto al desempeño del modelo, el RMSE de 35.14 millones y un MAPE de 7.60% sugieren un ajuste razonable, aunque el error medio absoluto de predicción (57.67 millones) señala cierta variabilidad en los pronósticos. En general, el modelo es útil para capturar tendencias y realizar estimaciones confiables, pero los intervalos de predicción amplios deben considerarse en contextos de decisión.
+
+
+**Conclusiones**
+
+El análisis de las remesas mensuales permitió comprender la estructura temporal de los datos y realizar predicciones confiables utilizando un modelo ARIMA. Inicialmente, la prueba de Dickey-Fuller Aumentada (ADF) mostró que la serie original no era estacionaria, lo que requería aplicar transformaciones como la diferenciación y el logaritmo. Estas transformaciones estabilizaron la media y la varianza, cumpliendo los requisitos de estacionariedad necesarios para el modelado.
+
+El modelo ajustado, un ARIMA(0,1,4) con drift, captura adecuadamente la estructura de la serie, con coeficientes significativos en los términos de media móvil y un término de drift que refleja un crecimiento constante en las remesas a lo largo del tiempo. Los diagnósticos de residuales indican que estos son independientes (prueba de Ljung-Box, p-valor = 0.5496) aunque no siguen una distribución estrictamente normal (prueba de Shapiro-Wilk, p-valor = 0.000214). A pesar de la no normalidad, la independencia de los residuales asegura la validez del modelo para realizar predicciones.
+
+En términos de desempeño, el modelo presenta un RMSE de 35.14 millones y un MAPE de 7.60%, lo que indica una buena precisión en general. Sin embargo, el error medio absoluto de predicción (57.67 millones) refleja cierta variabilidad en los datos, lo que debe considerarse al interpretar los resultados. Los pronósticos muestran valores consistentes con la tendencia histórica, aunque los intervalos de confianza amplios reflejan la incertidumbre inherente a este tipo de series económicas.
+
+En conclusión, el modelo ARIMA(0,1,4) con drift es adecuado para capturar las tendencias y variaciones de las remesas mensuales, proporcionando una herramienta útil para realizar pronósticos a corto plazo. No obstante, se recomienda considerar la naturaleza variable de las remesas y los intervalos de confianza al tomar decisiones basadas en estas predicciones.
+

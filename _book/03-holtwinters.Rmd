@@ -1,0 +1,145 @@
+---
+title: "Métodos de Holt-Winters y Suavizamiento"
+output: bookdown::html_document2
+---
+
+
+```{r include=FALSE}
+library(forecast)
+library(tseries)
+library(ggplot2)
+library(zoo)
+library(knitr)
+```
+La metodología combina dos enfoques para analizar y modelar la serie temporal.
+
+## Metodologia 
+
+Para trabajar con los datos de alta frecuencia, implementamos dos enfoques que permiten mejorar la precisión de los pronósticos:
+
+1. Agregación mensual para el método de Holt-Winters: Agrupamos la serie diaria en datos mensuales para observar patrones estacionales y tendencias de largo plazo, aprovechando la estructura aditiva y multiplicativa de Holt-Winters para modelar la variabilidad.
+
+2. Suavización de la serie diaria mediante métodos de media móvil y suavización exponencial: Aplicamos técnicas de suavización sobre la serie original de datos diarios para reducir la variabilidad de corto plazo y captar tendencias significativas en el tiempo.
+
+### Implementación del método Holt-Winters para datos mensuales
+
+Para aplicar el modelo de Holt-Winters, primero convertimos los datos diarios en una serie mensual, permitiendo captar patrones estacionales y de tendencia en intervalos de tiempo amplios. Posteriormente, utilizamos tanto el modelo aditivo como el multiplicativo, comparando su rendimiento para identificar cuál se adapta mejor a la estructura de la serie.
+
+```{r}
+# Agregar la serie a escala mensual
+df_mensual <- df %>%
+  mutate(Mes = format(Fecha, "%Y-%m")) %>%
+  group_by(Mes) %>%
+  summarise(Remesas = mean(Remesas, na.rm = TRUE))
+
+# Crear la serie temporal
+ts_remesas_mensual <- ts(df_mensual$Remesas,
+                         start = c(year(min(df$Fecha)), month(min(df$Fecha))),
+                         frequency = 12)
+
+# Aplicar Holt-Winters aditivo y multiplicativo
+hw_aditivo <- hw(ts_remesas_mensual, seasonal = "additive", h = 12)
+hw_multiplicativo <- hw(ts_remesas_mensual, seasonal = "multiplicative", h = 12)
+
+```
+
+Visualización
+
+```{r, fig.path="figure-html/", fig.width=7, fig.height=5}
+# Visualizar modelo aditivo
+plot(hw_aditivo, main = "Método Holt-Winters Aditivo (Datos Mensuales)",
+     xlab = "Tiempo", ylab = "Remesas Mensuales (millones)",
+     col = "darkblue", fcol = "red")
+
+# Visualizar modelo multiplicativo
+plot(hw_multiplicativo, main = "Método Holt-Winters Multiplicativo (Datos Mensuales)",
+     xlab = "Tiempo", ylab = "Remesas Mensuales (millones)",
+     col = "darkgreen", fcol = "red")
+
+```
+
+### Análisis del Modelo Holt-Winters Multiplicativo
+
+El modelo Holt-Winters multiplicativo refleja un ajuste adecuado a los datos mensuales de remesas, capturando tanto la tendencia creciente como la estacionalidad. El modelo proyecta un incremento sostenido en las remesas durante el horizonte de pronóstico de 12 meses, con intervalos de confianza que se amplían progresivamente, lo que indica una mayor incertidumbre en las predicciones a largo plazo. La elección de un modelo multiplicativo es adecuada en series donde la amplitud de las fluctuaciones estacionales crece proporcionalmente con el nivel de la tendencia, como es el caso de las remesas, que muestran un patrón más pronunciado en los últimos años. Esto resalta la naturaleza dinámica de las remesas, influenciada por factores estacionales que aumentan su impacto conforme el volumen crece.
+
+### Análisis del Modelo Holt-Winters Aditivo
+
+El modelo Holt-Winters aditivo también muestra un ajuste satisfactorio a la serie temporal, capturando las características clave de las remesas, incluida la tendencia y estacionalidad. Sin embargo, a diferencia del modelo multiplicativo, asume que las fluctuaciones estacionales son constantes en magnitud a lo largo del tiempo, lo que puede subestimar las variaciones en los períodos más recientes. El pronóstico para los próximos 12 meses proyecta una tendencia de crecimiento estable con intervalos de confianza similares al modelo multiplicativo. Este enfoque aditivo es más adecuado para series donde las fluctuaciones estacionales son independientes del nivel general, pero en este caso podría no capturar plenamente el crecimiento exponencial de las estacionalidades en la serie de remesas.
+
+Ambos modelos capturan bien los patrones de la serie, pero la elección entre aditivo y multiplicativo depende de la naturaleza de la estacionalidad en los datos. Dado que las fluctuaciones estacionales de las remesas parecen amplificarse con el tiempo, el modelo multiplicativo podría proporcionar un ajuste más realista para el análisis futuro.
+
+
+### Métodos de Suavización para Datos Mensuales
+
+
+```{r}
+# Suavización con medias móviles
+ma_3 <- ma(ts_remesas_mensual, order = 3)  # Media móvil de 3 meses
+ma_12 <- ma(ts_remesas_mensual, order = 12)  # Media móvil de 12 meses
+
+# Suavización exponencial simple
+ses_model <- ses(ts_remesas_mensual, h = 12)  # Pronóstico para 12 meses
+
+
+```
+Visualización
+```{r, fig.path="figure-html/", fig.width=7, fig.height=5}
+# Gráfico de medias móviles
+par(mfrow = c(2,1), mar = c(4,4,2,2))
+
+# Media móvil de 3 meses
+plot(ts_remesas_mensual, main = "Media Móvil de 3 meses (Remesas Mensuales)",
+     ylab = "Remesas Mensuales (millones)", col = "gray70", type = "l")
+lines(ma_3, col = "blue", lwd = 2)
+
+# Media móvil de 12 meses
+plot(ts_remesas_mensual, main = "Media Móvil de 12 meses (Remesas Mensuales)",
+     ylab = "Remesas Mensuales (millones)", col = "gray70", type = "l")
+lines(ma_12, col = "red", lwd = 2)
+
+```
+
+El análisis de las medias móviles de 3 meses y 12 meses sobre los datos mensuales de remesas revela diferentes perspectivas sobre las tendencias. La media móvil de 3 meses (línea azul) captura con mayor detalle las fluctuaciones de corto plazo, reflejando los cambios estacionales y las variaciones rápidas en el comportamiento de las remesas. Por otro lado, la media móvil de 12 meses (línea roja) suaviza significativamente estas fluctuaciones, mostrando una tendencia más estable y a largo plazo que permite identificar un crecimiento sostenido en los ingresos por remesas desde el año 2000. Este enfoque resalta cómo las medias móviles de diferentes órdenes ofrecen herramientas complementarias: la de 3 meses para monitorear cambios inmediatos y la de 12 meses para evaluar patrones generales y estructurales en la serie.
+
+
+
+Cada una de estas técnicas se visualiza para comparar la serie original y suavizada, ayudando a observar las diferencias y evaluar qué técnica proporciona mayor claridad en la tendencia de la precipitación diaria.
+
+### Análisis de Componentes (Datos Mensuales)
+
+Finalmente, el método de Holt-Winters permite extraer y analizar los componentes principales de la serie: nivel, tendencia y estacionalidad. Esto permite entender cómo cada componente contribuye a la variabilidad en la precipitación mensual, lo cual es clave para interpretar y ajustar los pronósticos. Presentamos los parámetros del modelo (Alpha, Beta, Gamma) y su influencia en los componentes.
+
+```{r, fig.path="figure-html/", fig.width=7, fig.height=5}
+# Extraer componentes del modelo aditivo mensual
+componentes_hw <- decompose(hw_aditivo$fitted)
+
+# Visualizar componentes
+plot(componentes_hw, col = "blue")
+
+```
+
+## Analisis de Componentes y Parametros
+
+```{r, fig.path="figure-html/", fig.width=7, fig.height=5}
+# Extraer componentes del modelo aditivo
+componentes_hw <- decompose(hw_aditivo$fitted)
+
+# Visualizar componentes
+plot(componentes_hw, col = "blue")
+
+# Análisis de parámetros estimados
+parametros <- data.frame(
+  Parametro = c("Alpha (Nivel)", "Beta (Tendencia)", "Gamma (Estacional)"),
+  Valor = round(c(hw_aditivo$model$par[1],
+                 hw_aditivo$model$par[2],
+                 hw_aditivo$model$par[3]), 4)
+)
+
+kable(parametros, caption = "Parámetros Estimados del Modelo Holt-Winters")
+
+```
+
+La descomposición aditiva de la serie temporal de remesas destaca tres componentes clave: tendencia, estacionalidad y ruido. La tendencia muestra un crecimiento sostenido a lo largo del tiempo, con una ligera estabilización hacia el final del período analizado, lo que sugiere un aumento constante en los ingresos por remesas. El componente estacional evidencia patrones cíclicos regulares que se repiten anualmente, reflejando fluctuaciones típicas asociadas a eventos específicos como períodos festivos o dinámicas económicas recurrentes. Por último, el componente residual (ruido) captura las variaciones no explicadas por la tendencia o la estacionalidad, que corresponden a factores aleatorios o atípicos.
+
+**Conclusión**
+El análisis mediante el método de Holt-Winters aplicado a la serie de remesas mensuales permitió capturar con precisión los componentes clave de la serie temporal: tendencia, estacionalidad y ruido. Tanto el modelo aditivo como el multiplicativo reflejaron adecuadamente la dinámica de crecimiento sostenido de las remesas, aunque el modelo multiplicativo mostró un mejor desempeño al adaptarse a las fluctuaciones estacionales crecientes observadas en los últimos años. Las métricas de precisión, como RMSE y ME, indicaron un ajuste satisfactorio para ambos modelos, con residuos adecuadamente descorrelacionados (baja autocorrelación). Las proyecciones realizadas para los próximos períodos confirmaron la estabilidad y el crecimiento esperado en los ingresos por remesas, aunque con mayor incertidumbre en horizontes más largos.

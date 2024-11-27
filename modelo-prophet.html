@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>4 Modelo Prophet para Series Temporales | Modelo Prophet para Series Temporales</title>
+  <meta name="description" content="4 Modelo Prophet para Series Temporales | Modelo Prophet para Series Temporales" />
+  <meta name="generator" content="bookdown 0.41 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="4 Modelo Prophet para Series Temporales | Modelo Prophet para Series Temporales" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="4 Modelo Prophet para Series Temporales | Modelo Prophet para Series Temporales" />
+  
+  
+  
+
+<meta name="author" content="Edward Rojas Mesa y Laura Vanessa Otálora" />
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html"/>
+
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/codefolding-lua-1.1/codefolding-lua.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    background-color: #232629;
+    color: #7a7c7d;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #7a7c7d;  padding-left: 4px; }
+div.sourceCode
+  { color: #cfcfc2; background-color: #232629; }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span { color: #cfcfc2; } /* Normal */
+code span.al { color: #95da4c; background-color: #4d1f24; font-weight: bold; } /* Alert */
+code span.an { color: #3f8058; } /* Annotation */
+code span.at { color: #2980b9; } /* Attribute */
+code span.bn { color: #f67400; } /* BaseN */
+code span.bu { color: #7f8c8d; } /* BuiltIn */
+code span.cf { color: #fdbc4b; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #3daee9; } /* Char */
+code span.cn { color: #27aeae; font-weight: bold; } /* Constant */
+code span.co { color: #7a7c7d; } /* Comment */
+code span.cv { color: #7f8c8d; } /* CommentVar */
+code span.do { color: #a43340; } /* Documentation */
+code span.dt { color: #2980b9; } /* DataType */
+code span.dv { color: #f67400; } /* DecVal */
+code span.er { color: #da4453; text-decoration: underline; } /* Error */
+code span.ex { color: #0099ff; font-weight: bold; } /* Extension */
+code span.fl { color: #f67400; } /* Float */
+code span.fu { color: #8e44ad; } /* Function */
+code span.im { color: #27ae60; } /* Import */
+code span.in { color: #c45b00; } /* Information */
+code span.kw { color: #cfcfc2; font-weight: bold; } /* Keyword */
+code span.op { color: #cfcfc2; } /* Operator */
+code span.ot { color: #27ae60; } /* Other */
+code span.pp { color: #27ae60; } /* Preprocessor */
+code span.re { color: #2980b9; background-color: #153042; } /* RegionMarker */
+code span.sc { color: #3daee9; } /* SpecialChar */
+code span.ss { color: #da4453; } /* SpecialString */
+code span.st { color: #f44f4f; } /* String */
+code span.va { color: #27aeae; } /* Variable */
+code span.vs { color: #da4453; } /* VerbatimString */
+code span.wa { color: #da4453; } /* Warning */
+</style>
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Importancia del Análisis de las Remesas</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#justificación-del-uso-de-datos-de-remesas"><i class="fa fa-check"></i><b>1.1</b> Justificación del uso de datos de remesas</a></li>
+<li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#datos-utilizados"><i class="fa fa-check"></i><b>1.2</b> Datos utilizados</a></li>
+<li class="chapter" data-level="1.3" data-path="index.html"><a href="index.html#objetivo"><i class="fa fa-check"></i><b>1.3</b> Objetivo</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="preparación-de-los-datos.html"><a href="preparación-de-los-datos.html"><i class="fa fa-check"></i><b>2</b> Preparación de los Datos</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="preparación-de-los-datos.html"><a href="preparación-de-los-datos.html#análisi-exploratorio-de-los-datos"><i class="fa fa-check"></i><b>2.1</b> Análisi exploratorio de los datos</a></li>
+<li class="chapter" data-level="2.2" data-path="preparación-de-los-datos.html"><a href="preparación-de-los-datos.html#evolución-de-la-serie-de-remesas"><i class="fa fa-check"></i><b>2.2</b> Evolución de la serie de Remesas</a></li>
+<li class="chapter" data-level="2.3" data-path="preparación-de-los-datos.html"><a href="preparación-de-los-datos.html#análisis-estacionalidad"><i class="fa fa-check"></i><b>2.3</b> Análisis Estacionalidad</a></li>
+<li class="chapter" data-level="2.4" data-path="preparación-de-los-datos.html"><a href="preparación-de-los-datos.html#visualización-comparativa-mensual"><i class="fa fa-check"></i><b>2.4</b> Visualización comparativa mensual</a></li>
+<li class="chapter" data-level="2.5" data-path="preparación-de-los-datos.html"><a href="preparación-de-los-datos.html#análisis-de-tendencias-anuales"><i class="fa fa-check"></i><b>2.5</b> Análisis de tendencias Anuales</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html"><i class="fa fa-check"></i><b>3</b> Descomposición y Análisis de Estacionariedad en Series Temporales de Precipitación</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#metodología"><i class="fa fa-check"></i><b>3.1</b> Metodología</a>
+<ul>
+<li class="chapter" data-level="3.1.1" data-path="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#evaluación-de-la-estacionariedad"><i class="fa fa-check"></i><b>3.1.1</b> Evaluación de la Estacionariedad:</a></li>
+<li class="chapter" data-level="3.1.2" data-path="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#descomposición-de-la-serie-temporal"><i class="fa fa-check"></i><b>3.1.2</b> Descomposición de la Serie Temporal:</a></li>
+<li class="chapter" data-level="3.1.3" data-path="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#transformación-logarítmica-y-análisis-de-diferenciación"><i class="fa fa-check"></i><b>3.1.3</b> Transformación Logarítmica y Análisis de Diferenciación:</a></li>
+<li class="chapter" data-level="3.1.4" data-path="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#estructura-temporal"><i class="fa fa-check"></i><b>3.1.4</b> Estructura Temporal</a></li>
+<li class="chapter" data-level="3.1.5" data-path="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#optimización-de-la-serie"><i class="fa fa-check"></i><b>3.1.5</b> Optimización de la Serie</a></li>
+<li class="chapter" data-level="3.1.6" data-path="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#discusión-de-resultados"><i class="fa fa-check"></i><b>3.1.6</b> Discusión de Resultados</a></li>
+</ul></li>
+<li class="chapter" data-level="3.2" data-path="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#metodologia"><i class="fa fa-check"></i><b>3.2</b> Metodologia</a>
+<ul>
+<li class="chapter" data-level="3.2.1" data-path="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#implementación-del-método-holt-winters-para-datos-mensuales"><i class="fa fa-check"></i><b>3.2.1</b> Implementación del método Holt-Winters para datos mensuales</a></li>
+<li class="chapter" data-level="3.2.2" data-path="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#análisis-del-modelo-holt-winters-multiplicativo"><i class="fa fa-check"></i><b>3.2.2</b> Análisis del Modelo Holt-Winters Multiplicativo</a></li>
+<li class="chapter" data-level="3.2.3" data-path="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#análisis-del-modelo-holt-winters-aditivo"><i class="fa fa-check"></i><b>3.2.3</b> Análisis del Modelo Holt-Winters Aditivo</a></li>
+<li class="chapter" data-level="3.2.4" data-path="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#métodos-de-suavización-para-datos-mensuales"><i class="fa fa-check"></i><b>3.2.4</b> Métodos de Suavización para Datos Mensuales</a></li>
+<li class="chapter" data-level="3.2.5" data-path="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#análisis-de-componentes-datos-mensuales"><i class="fa fa-check"></i><b>3.2.5</b> Análisis de Componentes (Datos Mensuales)</a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#analisis-de-componentes-y-parametros"><i class="fa fa-check"></i><b>3.3</b> Analisis de Componentes y Parametros</a></li>
+<li class="chapter" data-level="3.4" data-path="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#metodología-1"><i class="fa fa-check"></i><b>3.4</b> Metodología</a>
+<ul>
+<li class="chapter" data-level="3.4.1" data-path="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#análisis-exploratorio-de-la-serie"><i class="fa fa-check"></i><b>3.4.1</b> Análisis Exploratorio de la Serie</a></li>
+</ul></li>
+<li class="chapter" data-level="3.5" data-path="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#verificación-y-transformación-para-estacionariedad"><i class="fa fa-check"></i><b>3.5</b> Verificación y Transformación para Estacionariedad</a></li>
+<li class="chapter" data-level="3.6" data-path="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#modelo-arima"><i class="fa fa-check"></i><b>3.6</b> Modelo ARIMA</a></li>
+<li class="chapter" data-level="3.7" data-path="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#validación-de-modelos"><i class="fa fa-check"></i><b>3.7</b> Validación de modelos</a>
+<ul>
+<li class="chapter" data-level="3.7.1" data-path="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#análisis-de-los-tests-de-validación"><i class="fa fa-check"></i><b>3.7.1</b> Análisis de los Tests de Validación</a></li>
+<li class="chapter" data-level="3.7.2" data-path="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#evaluación-del-modelo"><i class="fa fa-check"></i><b>3.7.2</b> Evaluación del Modelo</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="modelo-prophet.html"><a href="modelo-prophet.html"><i class="fa fa-check"></i><b>4</b> Modelo Prophet para Series Temporales</a></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Modelo Prophet para Series Temporales</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="modelo-prophet" class="section level1 hasAnchor" number="4">
+<h1><span class="header-section-number">4</span> Modelo Prophet para Series Temporales<a href="modelo-prophet.html#modelo-prophet" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>En este análisis se utiliza el modelo Prophet para realizar pronósticos de las remesas mensuales enviadas a Colombia. Prophet es una herramienta desarrollada por Facebook para series temporales, que maneja tendencias no lineales, múltiples estacionalidades y eventos externos como días festivos. Este modelo es especialmente útil para datos con:</p>
+<ul>
+<li>Valores faltantes</li>
+<li>Cambios en la tendencia</li>
+<li>Patrones estacionales complejos</li>
+</ul>
+<details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb53-1"><a href="modelo-prophet.html#cb53-1" tabindex="-1"></a><span class="co"># Renombrar columnas y asegurarse del formato correcto</span></span>
+<span id="cb53-2"><a href="modelo-prophet.html#cb53-2" tabindex="-1"></a>remesas_df <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span></span>
+<span id="cb53-3"><a href="modelo-prophet.html#cb53-3" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">ds =</span> Fecha, <span class="at">y =</span> Remesas) <span class="sc">%&gt;%</span></span>
+<span id="cb53-4"><a href="modelo-prophet.html#cb53-4" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">ds =</span> <span class="fu">as.Date</span>(ds))  <span class="co"># Convertir fechas a formato Date</span></span>
+<span id="cb53-5"><a href="modelo-prophet.html#cb53-5" tabindex="-1"></a></span>
+<span id="cb53-6"><a href="modelo-prophet.html#cb53-6" tabindex="-1"></a><span class="co"># Ver un vistazo de los datos</span></span>
+<span id="cb53-7"><a href="modelo-prophet.html#cb53-7" tabindex="-1"></a><span class="fu">head</span>(remesas_df)</span></code></pre></div>
+</details>
+<pre><code>## # A tibble: 6 × 3
+##   ds             y Mes  
+##   &lt;date&gt;     &lt;dbl&gt; &lt;ord&gt;
+## 1 2000-01-01  104. ene  
+## 2 2000-02-01  146. feb  
+## 3 2000-03-01  125. mar  
+## 4 2000-01-01  116. ene  
+## 5 2000-05-01  129. may  
+## 6 2000-06-01  134. jun</code></pre>
+<p>Es importante revisar los datos faltantes y duplicados, debido a que, el modelo prophet no acepta datos duplicados</p>
+<details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb55-1"><a href="modelo-prophet.html#cb55-1" tabindex="-1"></a><span class="fu">str</span>(remesas_df)</span></code></pre></div>
+</details>
+<pre><code>## tibble [244 × 3] (S3: tbl_df/tbl/data.frame)
+##  $ ds : Date[1:244], format: &quot;2000-01-01&quot; &quot;2000-02-01&quot; ...
+##  $ y  : num [1:244] 104 146 125 116 129 ...
+##  $ Mes: Ord.factor w/ 12 levels &quot;ene&quot;&lt;&quot;feb&quot;&lt;&quot;mar&quot;&lt;..: 1 2 3 1 5 6 7 1 9 10 ...</code></pre>
+<p>Se debe eliminar la columna mes</p>
+<details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb57-1"><a href="modelo-prophet.html#cb57-1" tabindex="-1"></a><span class="co"># Eliminar la columna &#39;Mes&#39; y verificar formato</span></span>
+<span id="cb57-2"><a href="modelo-prophet.html#cb57-2" tabindex="-1"></a>remesas_df <span class="ot">&lt;-</span> remesas_df <span class="sc">%&gt;%</span> <span class="fu">select</span>(ds, y)</span>
+<span id="cb57-3"><a href="modelo-prophet.html#cb57-3" tabindex="-1"></a>remesas_df</span></code></pre></div>
+</details>
+<pre><code>## # A tibble: 244 × 2
+##    ds             y
+##    &lt;date&gt;     &lt;dbl&gt;
+##  1 2000-01-01  104.
+##  2 2000-02-01  146.
+##  3 2000-03-01  125.
+##  4 2000-01-01  116.
+##  5 2000-05-01  129.
+##  6 2000-06-01  134.
+##  7 2000-07-01  118.
+##  8 2000-01-01  132.
+##  9 2000-09-01  139.
+## 10 2000-10-01  128.
+## # ℹ 234 more rows</code></pre>
+<details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb59-1"><a href="modelo-prophet.html#cb59-1" tabindex="-1"></a><span class="fu">str</span>(remesas_df)</span></code></pre></div>
+</details>
+<pre><code>## tibble [244 × 2] (S3: tbl_df/tbl/data.frame)
+##  $ ds: Date[1:244], format: &quot;2000-01-01&quot; &quot;2000-02-01&quot; ...
+##  $ y : num [1:244] 104 146 125 116 129 ...</code></pre>
+<details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb61"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb61-1"><a href="modelo-prophet.html#cb61-1" tabindex="-1"></a><span class="fu">head</span>(remesas_df)</span></code></pre></div>
+</details>
+<pre><code>## # A tibble: 6 × 2
+##   ds             y
+##   &lt;date&gt;     &lt;dbl&gt;
+## 1 2000-01-01  104.
+## 2 2000-02-01  146.
+## 3 2000-03-01  125.
+## 4 2000-01-01  116.
+## 5 2000-05-01  129.
+## 6 2000-06-01  134.</code></pre>
+<details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb63"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb63-1"><a href="modelo-prophet.html#cb63-1" tabindex="-1"></a><span class="co"># Paso 1: Agrupar datos para eliminar duplicados</span></span>
+<span id="cb63-2"><a href="modelo-prophet.html#cb63-2" tabindex="-1"></a>remesas_df <span class="ot">&lt;-</span> remesas_df <span class="sc">%&gt;%</span></span>
+<span id="cb63-3"><a href="modelo-prophet.html#cb63-3" tabindex="-1"></a>  <span class="fu">group_by</span>(ds) <span class="sc">%&gt;%</span></span>
+<span id="cb63-4"><a href="modelo-prophet.html#cb63-4" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">y =</span> <span class="fu">mean</span>(y, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb63-5"><a href="modelo-prophet.html#cb63-5" tabindex="-1"></a>  <span class="fu">ungroup</span>()</span></code></pre></div>
+</details>
+<details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb64"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb64-1"><a href="modelo-prophet.html#cb64-1" tabindex="-1"></a><span class="fu">str</span>(remesas_df)</span></code></pre></div>
+</details>
+<pre><code>## tibble [183 × 2] (S3: tbl_df/tbl/data.frame)
+##  $ ds: Date[1:183], format: &quot;2000-01-01&quot; &quot;2000-02-01&quot; ...
+##  $ y : num [1:183] 130 146 125 129 134 ...</code></pre>
+<details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb66"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb66-1"><a href="modelo-prophet.html#cb66-1" tabindex="-1"></a><span class="fu">anyDuplicated</span>(remesas_df<span class="sc">$</span>ds) </span></code></pre></div>
+</details>
+<pre><code>## [1] 0</code></pre>
+<details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb68"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb68-1"><a href="modelo-prophet.html#cb68-1" tabindex="-1"></a><span class="fu">sum</span>(<span class="fu">is.na</span>(remesas_df<span class="sc">$</span>y))</span></code></pre></div>
+</details>
+<pre><code>## [1] 0</code></pre>
+<details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb70"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb70-1"><a href="modelo-prophet.html#cb70-1" tabindex="-1"></a><span class="co"># Ajustar el modelo</span></span>
+<span id="cb70-2"><a href="modelo-prophet.html#cb70-2" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">prophet</span>(remesas_df)</span>
+<span id="cb70-3"><a href="modelo-prophet.html#cb70-3" tabindex="-1"></a><span class="fu">print</span>(model)</span></code></pre></div>
+</details>
+<pre><code>## &lt;prophet model definition&gt;</code></pre>
+<p><strong>COnclusiones</strong></p>
+<p>El modelo Prophet no resultó adecuado para la serie temporal de remesas debido a problemas específicos con la estructura de los datos y las limitaciones del modelo para ajustarse correctamente. A pesar de que Prophet está diseñado para manejar datos con patrones estacionales y tendencias no lineales, la serie presentó duplicados y datos faltantes que afectaron el preprocesamiento y ajuste del modelo. Además, la estacionalidad mensual esperada no fue bien capturada, posiblemente debido a la baja variabilidad en las remesas mensuales o la falta de eventos significativos que el modelo pudiera identificar como puntos de cambio. Estos desafíos sugieren que un enfoque alternativo, como modelos ARIMA o Holt-Winters, podría ser más efectivo para esta serie de datos.</p>
+
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

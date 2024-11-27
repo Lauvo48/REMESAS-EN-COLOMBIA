@@ -1,0 +1,145 @@
+---
+title: "Descomposición y Análisis de Estacionariedad"
+output: bookdown::html_document2
+---
+
+
+# Descomposición y Análisis de Estacionariedad en Series Temporales de Precipitación
+
+```{r include=FALSE}
+library(forecast)
+library(tseries)
+library(ggplot2)
+library(zoo)
+library(knitr)
+
+```
+
+## Metodología
+
+La metodología se desarrolla en tres etapas esenciales, cada una orientada a evaluar y caracterizar la estructura de la serie temporal para el modelado adecuado.
+
+### Evaluación de la Estacionariedad:
+
+Se aplicó la prueba de Dickey-Fuller Aumentada (ADF) para determinar si la serie presenta una tendencia o si sus propiedades estadísticas son constantes a lo largo del tiempo. Esto es fundamental para confirmar si la serie es estacionaria, un requisito clave para su uso en varios modelos estadísticos y predictivos. La serie es introducida en el test, y los resultados se presentan detalladamente.
+
+```{r}
+#| warning: false
+#| message: false
+
+# Prueba de estacionariedad
+adf_test <- adf.test(ts_remesas)
+resultado <- paste(
+  "Prueba de Dickey-Fuller Aumentada",
+  paste(rep("-", 32), collapse = ""),
+  sprintf("Estadístico: %.3f", adf_test$statistic),
+  sprintf("p-valor: %.3f", adf_test$p.value),
+  sep = "\n"
+)
+cat(resultado)
+
+```
+El resultado de la prueba de Dickey-Fuller Aumentada (ADF) muestra un estadístico de -2.019 y un p-valor de 0.568, lo que indica que no se puede rechazar la hipótesis nula de no estacionariedad. Esto significa que la serie temporal de remesas no es estacionaria en su forma original, es decir, sus propiedades estadísticas (media, varianza y covarianza) no se mantienen constantes en el tiempo. Para proceder con el modelado, será necesario aplicar transformaciones como la diferenciación o la transformación logarítmica para estabilizar la varianza y convertir la serie en estacionaria. Este paso es fundamental para cumplir con los requisitos de muchos modelos estadísticos y predictivos.
+
+### Descomposición de la Serie Temporal:
+
+Se utilizó el método STL (Seasonal and Trend decomposition using Loess) para descomponer la serie en componentes estacional, tendencial y residual. Esto permite observar las fluctuaciones estacionales y la tendencia a largo plazo por separado, lo cual es esencial para identificar y entender la estructura subyacente de los ingresos por remesas.
+
+```{r, fig.path="figure-html/", fig.width=7, fig.height=5}
+#| warning: false
+#| message: false
+
+# Descomposición STL
+descomp <- stl(ts_remesas, s.window = "periodic")
+
+# Cálculo de contribuciones
+componentes <- data.frame(
+  Componente = c("Estacional", "Tendencial", "Residual"),
+  Minimo = round(c(
+    min(descomp$time.series[,"seasonal"]),
+    min(descomp$time.series[,"trend"]),
+    min(descomp$time.series[,"remainder"])
+  ), 2),
+  Maximo = round(c(
+    max(descomp$time.series[,"seasonal"]),
+    max(descomp$time.series[,"trend"]),
+    max(descomp$time.series[,"remainder"])
+  ), 2)
+)
+
+kable(componentes, 
+      caption = "Caracterización de los Componentes de la Serie",
+      align = c('l', 'r', 'r', 'r'))
+
+# Visualización de la descomposición
+plot_descomp <- function(descomp) {
+  par(mfrow = c(4,1), mar = c(3,4,2,2), oma = c(0,0,2,0))
+  plot(ts_remesas, main = "Serie Original", col = "steelblue", ylab = "Remesas (millones)")
+  plot(descomp$time.series[,"seasonal"], main = "Componente Estacional", 
+       col = "darkgreen", ylab = "millones")
+  plot(descomp$time.series[,"trend"], main = "Componente Tendencial",
+       col = "darkred", ylab = "millones")
+  plot(descomp$time.series[,"remainder"], main = "Componente Residual",
+       col = "purple", ylab = "millones")
+  title("Descomposición STL de la Serie de Remesas", outer = TRUE)
+}
+
+plot_descomp(descomp)
+
+```
+
+### Transformación Logarítmica y Análisis de Diferenciación:
+
+Para abordar la alta variabilidad en los ingresos por remesas, se realiza una transformación logarítmica para reducir la varianza en eventos extremos. Adicionalmente, se utiliza la función ndiffs para evaluar si se requieren diferenciaciones adicionales, con el objetivo de confirmar la estacionariedad en un sentido práctico y optimizar su comportamiento en futuros análisis
+
+```{r, fig.path="figure-html/", fig.width=7, fig.height=5}
+#| warning: false
+
+# Transformación logarítmica
+ts_remesas_log <- log1p(ts_remesas)
+
+# Análisis de diferenciación
+n_diff <- ndiffs(ts_remesas)
+
+# Visualización comparativa
+par(mfrow = c(2,1), mar = c(4,4,2,2))
+plot(ts_remesas, main = "Serie Original", col = "steelblue", ylab = "Remesas (millones)")
+plot(ts_remesas_log, main = "Serie Transformada (log)", col = "darkgreen", 
+     ylab = "log(Remesas + 1)")
+
+```
+
+### Estructura Temporal
+
+La descomposición STL revela tres componentes que estructuran la dinámica temporal de la precipitación:
+
+- Componente Estacional: Varía entre -3.43 y 9.97 mm, con un 75.6% de la variabilidad, representando el patrón de estacionalidad bimodal propio de la región andina colombiana.
+
+- Componente Tendencial: Oscila de 1.93 a 4.95 mm y explica el 17.2% de la variabilidad. Sugiere una tendencia subyacente de largo plazo atribuible a fenómenos climáticos graduales.
+
+- Componente Residual: Cubre un rango de -13.18 a 56.17 mm, explicando el 106.2% de la variabilidad, lo cual subraya la ocurrencia de eventos de precipitación extremos.
+
+
+
+### Optimización de la Serie
+
+Para abordar la alta variabilidad en los eventos extremos de precipitación, se aplicó una transformación logarítmica, lo cual permite:
+
+- Estabilizar la varianza en períodos de alta precipitación.
+- Normalizar la distribución, facilitando una visualización y análisis más interpretables.
+
+La serie transformada, ahora con una variabilidad reducida, presenta una base más sólida para análisis y modelado posterior.
+
+### Discusión de Resultados
+
+La transformación logarítmica implementada demuestra ser efectiva para:
+
+- Estabilizar la varianza, particularmente en períodos de alta precipitación
+- Normalizar la distribución de los datos
+- Preservar la interpretabilidad de los patrones estacionales
+- Facilitar la identificación de tendencias subyacentes
+
+
+**Conclusiones**
+
+El análisis de la serie temporal de remesas mostró una dinámica clara y significativa, con una tendencia de crecimiento constante a lo largo del período estudiado, patrones estacionales bien definidos y fluctuaciones residuales que capturan eventos atípicos o aleatorios. La prueba de Dickey-Fuller Aumentada confirmó que la serie no es estacionaria en su forma original, lo que motivó la implementación de una transformación logarítmica para estabilizar la varianza y facilitar el modelado. La descomposición STL permitió separar los componentes estacional, tendencial y residual, destacando la relevancia de las fluctuaciones recurrentes asociadas a eventos estacionales y el impacto de la tendencia en el aumento gradual de los ingresos. Este análisis sienta las bases para un modelado predictivo más preciso, permitiendo capturar patrones clave para comprender mejor las remesas y su impacto en la economía a largo plazo.

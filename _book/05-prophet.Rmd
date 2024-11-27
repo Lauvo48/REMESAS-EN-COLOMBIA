@@ -1,0 +1,88 @@
+---
+title: "Modelo Prophet para Series Temporales"
+output: bookdown::html_document2
+---
+
+
+# Modelo Prophet para Series Temporales {#modelo-prophet}
+
+```{r include=FALSE}
+# Cargar librerías necesarias
+library(prophet)
+library(dplyr)
+library(ggplot2)
+library(tsibble)
+library(fable.prophet)
+```
+
+En este análisis se utiliza el modelo Prophet para realizar pronósticos de las remesas mensuales enviadas a Colombia. Prophet es una herramienta desarrollada por Facebook para series temporales, que maneja tendencias no lineales, múltiples estacionalidades y eventos externos como días festivos. Este modelo es especialmente útil para datos con:
+
+- Valores faltantes
+- Cambios en la tendencia
+- Patrones estacionales complejos
+
+
+```{r}
+# Renombrar columnas y asegurarse del formato correcto
+remesas_df <- df %>%
+  rename(ds = Fecha, y = Remesas) %>%
+  mutate(ds = as.Date(ds))  # Convertir fechas a formato Date
+
+# Ver un vistazo de los datos
+head(remesas_df)
+
+```
+
+Es importante revisar los datos faltantes y duplicados, debido a que, el modelo prophet no acepta datos duplicados
+
+```{r}
+str(remesas_df)
+```
+Se debe eliminar la columna mes
+
+```{r}
+# Eliminar la columna 'Mes' y verificar formato
+remesas_df <- remesas_df %>% select(ds, y)
+remesas_df
+```
+
+```{r}
+str(remesas_df)
+head(remesas_df)
+
+```
+```{r}
+# Paso 1: Agrupar datos para eliminar duplicados
+remesas_df <- remesas_df %>%
+  group_by(ds) %>%
+  summarise(y = mean(y, na.rm = TRUE)) %>%
+  ungroup()
+```
+
+```{r}
+str(remesas_df)
+```
+```{r}
+anyDuplicated(remesas_df$ds) 
+sum(is.na(remesas_df$y))
+```
+```{r}
+# Ajustar el modelo
+model <- prophet(remesas_df)
+print(model)
+
+```
+**COnclusiones**
+
+El modelo Prophet no resultó adecuado para la serie temporal de remesas debido a problemas específicos con la estructura de los datos y las limitaciones del modelo para ajustarse correctamente. A pesar de que Prophet está diseñado para manejar datos con patrones estacionales y tendencias no lineales, la serie presentó duplicados y datos faltantes que afectaron el preprocesamiento y ajuste del modelo. Además, la estacionalidad mensual esperada no fue bien capturada, posiblemente debido a la baja variabilidad en las remesas mensuales o la falta de eventos significativos que el modelo pudiera identificar como puntos de cambio. Estos desafíos sugieren que un enfoque alternativo, como modelos ARIMA o Holt-Winters, podría ser más efectivo para esta serie de datos.
+
+
+
+
+
+
+
+
+
+
+

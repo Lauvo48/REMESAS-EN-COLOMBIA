@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>2 Preparación de los Datos | Modelo Prophet para Series Temporales</title>
+  <meta name="description" content="2 Preparación de los Datos | Modelo Prophet para Series Temporales" />
+  <meta name="generator" content="bookdown 0.41 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="2 Preparación de los Datos | Modelo Prophet para Series Temporales" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="2 Preparación de los Datos | Modelo Prophet para Series Temporales" />
+  
+  
+  
+
+<meta name="author" content="Edward Rojas Mesa y Laura Vanessa Otálora" />
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="index.html"/>
+<link rel="next" href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/codefolding-lua-1.1/codefolding-lua.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    background-color: #232629;
+    color: #7a7c7d;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #7a7c7d;  padding-left: 4px; }
+div.sourceCode
+  { color: #cfcfc2; background-color: #232629; }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span { color: #cfcfc2; } /* Normal */
+code span.al { color: #95da4c; background-color: #4d1f24; font-weight: bold; } /* Alert */
+code span.an { color: #3f8058; } /* Annotation */
+code span.at { color: #2980b9; } /* Attribute */
+code span.bn { color: #f67400; } /* BaseN */
+code span.bu { color: #7f8c8d; } /* BuiltIn */
+code span.cf { color: #fdbc4b; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #3daee9; } /* Char */
+code span.cn { color: #27aeae; font-weight: bold; } /* Constant */
+code span.co { color: #7a7c7d; } /* Comment */
+code span.cv { color: #7f8c8d; } /* CommentVar */
+code span.do { color: #a43340; } /* Documentation */
+code span.dt { color: #2980b9; } /* DataType */
+code span.dv { color: #f67400; } /* DecVal */
+code span.er { color: #da4453; text-decoration: underline; } /* Error */
+code span.ex { color: #0099ff; font-weight: bold; } /* Extension */
+code span.fl { color: #f67400; } /* Float */
+code span.fu { color: #8e44ad; } /* Function */
+code span.im { color: #27ae60; } /* Import */
+code span.in { color: #c45b00; } /* Information */
+code span.kw { color: #cfcfc2; font-weight: bold; } /* Keyword */
+code span.op { color: #cfcfc2; } /* Operator */
+code span.ot { color: #27ae60; } /* Other */
+code span.pp { color: #27ae60; } /* Preprocessor */
+code span.re { color: #2980b9; background-color: #153042; } /* RegionMarker */
+code span.sc { color: #3daee9; } /* SpecialChar */
+code span.ss { color: #da4453; } /* SpecialString */
+code span.st { color: #f44f4f; } /* String */
+code span.va { color: #27aeae; } /* Variable */
+code span.vs { color: #da4453; } /* VerbatimString */
+code span.wa { color: #da4453; } /* Warning */
+</style>
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Importancia del Análisis de las Remesas</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#justificación-del-uso-de-datos-de-remesas"><i class="fa fa-check"></i><b>1.1</b> Justificación del uso de datos de remesas</a></li>
+<li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#datos-utilizados"><i class="fa fa-check"></i><b>1.2</b> Datos utilizados</a></li>
+<li class="chapter" data-level="1.3" data-path="index.html"><a href="index.html#objetivo"><i class="fa fa-check"></i><b>1.3</b> Objetivo</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="preparación-de-los-datos.html"><a href="preparación-de-los-datos.html"><i class="fa fa-check"></i><b>2</b> Preparación de los Datos</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="preparación-de-los-datos.html"><a href="preparación-de-los-datos.html#análisi-exploratorio-de-los-datos"><i class="fa fa-check"></i><b>2.1</b> Análisi exploratorio de los datos</a></li>
+<li class="chapter" data-level="2.2" data-path="preparación-de-los-datos.html"><a href="preparación-de-los-datos.html#evolución-de-la-serie-de-remesas"><i class="fa fa-check"></i><b>2.2</b> Evolución de la serie de Remesas</a></li>
+<li class="chapter" data-level="2.3" data-path="preparación-de-los-datos.html"><a href="preparación-de-los-datos.html#análisis-estacionalidad"><i class="fa fa-check"></i><b>2.3</b> Análisis Estacionalidad</a></li>
+<li class="chapter" data-level="2.4" data-path="preparación-de-los-datos.html"><a href="preparación-de-los-datos.html#visualización-comparativa-mensual"><i class="fa fa-check"></i><b>2.4</b> Visualización comparativa mensual</a></li>
+<li class="chapter" data-level="2.5" data-path="preparación-de-los-datos.html"><a href="preparación-de-los-datos.html#análisis-de-tendencias-anuales"><i class="fa fa-check"></i><b>2.5</b> Análisis de tendencias Anuales</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html"><i class="fa fa-check"></i><b>3</b> Descomposición y Análisis de Estacionariedad en Series Temporales de Precipitación</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#metodología"><i class="fa fa-check"></i><b>3.1</b> Metodología</a>
+<ul>
+<li class="chapter" data-level="3.1.1" data-path="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#evaluación-de-la-estacionariedad"><i class="fa fa-check"></i><b>3.1.1</b> Evaluación de la Estacionariedad:</a></li>
+<li class="chapter" data-level="3.1.2" data-path="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#descomposición-de-la-serie-temporal"><i class="fa fa-check"></i><b>3.1.2</b> Descomposición de la Serie Temporal:</a></li>
+<li class="chapter" data-level="3.1.3" data-path="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#transformación-logarítmica-y-análisis-de-diferenciación"><i class="fa fa-check"></i><b>3.1.3</b> Transformación Logarítmica y Análisis de Diferenciación:</a></li>
+<li class="chapter" data-level="3.1.4" data-path="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#estructura-temporal"><i class="fa fa-check"></i><b>3.1.4</b> Estructura Temporal</a></li>
+<li class="chapter" data-level="3.1.5" data-path="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#optimización-de-la-serie"><i class="fa fa-check"></i><b>3.1.5</b> Optimización de la Serie</a></li>
+<li class="chapter" data-level="3.1.6" data-path="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#discusión-de-resultados"><i class="fa fa-check"></i><b>3.1.6</b> Discusión de Resultados</a></li>
+</ul></li>
+<li class="chapter" data-level="3.2" data-path="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#metodologia"><i class="fa fa-check"></i><b>3.2</b> Metodologia</a>
+<ul>
+<li class="chapter" data-level="3.2.1" data-path="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#implementación-del-método-holt-winters-para-datos-mensuales"><i class="fa fa-check"></i><b>3.2.1</b> Implementación del método Holt-Winters para datos mensuales</a></li>
+<li class="chapter" data-level="3.2.2" data-path="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#análisis-del-modelo-holt-winters-multiplicativo"><i class="fa fa-check"></i><b>3.2.2</b> Análisis del Modelo Holt-Winters Multiplicativo</a></li>
+<li class="chapter" data-level="3.2.3" data-path="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#análisis-del-modelo-holt-winters-aditivo"><i class="fa fa-check"></i><b>3.2.3</b> Análisis del Modelo Holt-Winters Aditivo</a></li>
+<li class="chapter" data-level="3.2.4" data-path="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#métodos-de-suavización-para-datos-mensuales"><i class="fa fa-check"></i><b>3.2.4</b> Métodos de Suavización para Datos Mensuales</a></li>
+<li class="chapter" data-level="3.2.5" data-path="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#análisis-de-componentes-datos-mensuales"><i class="fa fa-check"></i><b>3.2.5</b> Análisis de Componentes (Datos Mensuales)</a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#analisis-de-componentes-y-parametros"><i class="fa fa-check"></i><b>3.3</b> Analisis de Componentes y Parametros</a></li>
+<li class="chapter" data-level="3.4" data-path="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#metodología-1"><i class="fa fa-check"></i><b>3.4</b> Metodología</a>
+<ul>
+<li class="chapter" data-level="3.4.1" data-path="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#análisis-exploratorio-de-la-serie"><i class="fa fa-check"></i><b>3.4.1</b> Análisis Exploratorio de la Serie</a></li>
+</ul></li>
+<li class="chapter" data-level="3.5" data-path="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#verificación-y-transformación-para-estacionariedad"><i class="fa fa-check"></i><b>3.5</b> Verificación y Transformación para Estacionariedad</a></li>
+<li class="chapter" data-level="3.6" data-path="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#modelo-arima"><i class="fa fa-check"></i><b>3.6</b> Modelo ARIMA</a></li>
+<li class="chapter" data-level="3.7" data-path="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#validación-de-modelos"><i class="fa fa-check"></i><b>3.7</b> Validación de modelos</a>
+<ul>
+<li class="chapter" data-level="3.7.1" data-path="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#análisis-de-los-tests-de-validación"><i class="fa fa-check"></i><b>3.7.1</b> Análisis de los Tests de Validación</a></li>
+<li class="chapter" data-level="3.7.2" data-path="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#evaluación-del-modelo"><i class="fa fa-check"></i><b>3.7.2</b> Evaluación del Modelo</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="modelo-prophet.html"><a href="modelo-prophet.html"><i class="fa fa-check"></i><b>4</b> Modelo Prophet para Series Temporales</a></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Modelo Prophet para Series Temporales</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="preparación-de-los-datos" class="section level1 hasAnchor" number="2">
+<h1><span class="header-section-number">2</span> Preparación de los Datos<a href="preparación-de-los-datos.html#preparación-de-los-datos" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>La base de datos contiene información sobre los ingresos de remesas mensuales en Colombia desde el Anio 2000. Los datos han sido limpiados para corregir inconsistencias en el formato de las fechas.</p>
+<p>Vamos a cambiar el formato de fecha</p>
+<details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="preparación-de-los-datos.html#cb1-1" tabindex="-1"></a><span class="co"># Covertir la variable fecha en formato Date</span></span>
+<span id="cb1-2"><a href="preparación-de-los-datos.html#cb1-2" tabindex="-1"></a>df<span class="sc">$</span>Fecha <span class="ot">&lt;-</span> <span class="fu">parse_date_time</span>(df<span class="sc">$</span>Fecha, <span class="at">orders =</span> <span class="fu">c</span>(<span class="st">&quot;Y b&quot;</span>, <span class="st">&quot;Y-m&quot;</span>, <span class="st">&quot;Y&quot;</span>))</span>
+<span id="cb1-3"><a href="preparación-de-los-datos.html#cb1-3" tabindex="-1"></a><span class="fu">head</span>(df) <span class="co"># visualizar otra vez para verificar el cambio</span></span></code></pre></div>
+</details>
+<pre><code>## # A tibble: 6 × 2
+##   Fecha               Remesas
+##   &lt;dttm&gt;                &lt;dbl&gt;
+## 1 2000-01-01 00:00:00    104.
+## 2 2000-02-01 00:00:00    146.
+## 3 2000-03-01 00:00:00    125.
+## 4 2000-01-01 00:00:00    116.
+## 5 2000-05-01 00:00:00    129.
+## 6 2000-06-01 00:00:00    134.</code></pre>
+<p>Verificar si existen valores faltantes</p>
+<details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="preparación-de-los-datos.html#cb3-1" tabindex="-1"></a><span class="co"># Verificar valores faltantes</span></span>
+<span id="cb3-2"><a href="preparación-de-los-datos.html#cb3-2" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="preparación-de-los-datos.html#cb3-3" tabindex="-1"></a><span class="fu">sum</span>(<span class="fu">is.na</span>(df<span class="sc">$</span>Fecha)) <span class="co"># no existen valores faltantes en la serie</span></span></code></pre></div>
+</details>
+<pre><code>## [1] 0</code></pre>
+<p>No existen valores faltantes en la serie</p>
+<div id="análisi-exploratorio-de-los-datos" class="section level2 hasAnchor" number="2.1">
+<h2><span class="header-section-number">2.1</span> Análisi exploratorio de los datos<a href="preparación-de-los-datos.html#análisi-exploratorio-de-los-datos" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="preparación-de-los-datos.html#cb5-1" tabindex="-1"></a><span class="co"># Resumen estadístico</span></span>
+<span id="cb5-2"><a href="preparación-de-los-datos.html#cb5-2" tabindex="-1"></a><span class="fu">summary</span>(df<span class="sc">$</span>Remesas)</span></code></pre></div>
+</details>
+<pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##   103.8   270.9   338.6   342.1   398.9   715.9</code></pre>
+<details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="preparación-de-los-datos.html#cb7-1" tabindex="-1"></a><span class="co"># Visualizar valores faltantes en la columna Remesas</span></span>
+<span id="cb7-2"><a href="preparación-de-los-datos.html#cb7-2" tabindex="-1"></a><span class="fu">sum</span>(<span class="fu">is.na</span>(df<span class="sc">$</span>Remesas))</span></code></pre></div>
+</details>
+<pre><code>## [1] 0</code></pre>
+<p>El análisis del resumen estadístico muestra que los ingresos por remesas varían significativamente, con un valor mínimo de 103.8 millones y un máximo de 715.9 millones. La mediana de 338.6 millones, cercana al promedio de 342.1 millones, sugiere una distribución relativamente simétrica, aunque los valores en el tercer cuartil (398.9 millones) indican un sesgo hacia montos más altos. Este rango refleja un crecimiento sostenido en las remesas a lo largo del tiempo, con picos que podrían estar relacionados con períodos específicos de mayor envío, como crisis económicas o variaciones en la migración. Además, la ausencia de valores faltantes garantiza la integridad del análisis.</p>
+</div>
+<div id="evolución-de-la-serie-de-remesas" class="section level2 hasAnchor" number="2.2">
+<h2><span class="header-section-number">2.2</span> Evolución de la serie de Remesas<a href="preparación-de-los-datos.html#evolución-de-la-serie-de-remesas" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="preparación-de-los-datos.html#cb9-1" tabindex="-1"></a><span class="fu">ggplot</span>(df, <span class="fu">aes</span>(<span class="at">x =</span> Fecha, <span class="at">y =</span> Remesas)) <span class="sc">+</span></span>
+<span id="cb9-2"><a href="preparación-de-los-datos.html#cb9-2" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">color =</span> <span class="st">&quot;blue&quot;</span>, <span class="at">linewidth =</span> <span class="dv">1</span>) <span class="sc">+</span>  <span class="co"># Usar `linewidth` en lugar de `size` para líneas</span></span>
+<span id="cb9-3"><a href="preparación-de-los-datos.html#cb9-3" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb9-4"><a href="preparación-de-los-datos.html#cb9-4" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">&quot;Evolución de los Ingresos de Remesas&quot;</span>,</span>
+<span id="cb9-5"><a href="preparación-de-los-datos.html#cb9-5" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">&quot;Anio&quot;</span>,</span>
+<span id="cb9-6"><a href="preparación-de-los-datos.html#cb9-6" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">&quot;Ingresos (millones)&quot;</span></span>
+<span id="cb9-7"><a href="preparación-de-los-datos.html#cb9-7" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb9-8"><a href="preparación-de-los-datos.html#cb9-8" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">15</span>) <span class="sc">+</span>  <span class="co"># TamAnio de fuente mejorado</span></span>
+<span id="cb9-9"><a href="preparación-de-los-datos.html#cb9-9" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb9-10"><a href="preparación-de-los-datos.html#cb9-10" tabindex="-1"></a>    <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>, <span class="at">face =</span> <span class="st">&quot;bold&quot;</span>),  <span class="co"># Centrar y resaltar el título</span></span>
+<span id="cb9-11"><a href="preparación-de-los-datos.html#cb9-11" tabindex="-1"></a>    <span class="at">axis.text =</span> <span class="fu">element_text</span>(<span class="at">color =</span> <span class="st">&quot;black&quot;</span>),  <span class="co"># Texto de los ejes en negro</span></span>
+<span id="cb9-12"><a href="preparación-de-los-datos.html#cb9-12" tabindex="-1"></a>    <span class="at">axis.title =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">&quot;bold&quot;</span>)  <span class="co"># Resaltar títulos de ejes</span></span>
+<span id="cb9-13"><a href="preparación-de-los-datos.html#cb9-13" tabindex="-1"></a>  )</span></code></pre></div>
+</details>
+<p><img src="figure-html/unnamed-chunk-4-1.png" /><!-- --></p>
+<p>El gráfico muestra una clara tendencia ascendente en los ingresos por remesas en Colombia desde el Anio 2000 hasta 2020, reflejando un crecimiento sostenido en el tiempo. Se observan fluctuaciones estacionales regulares, con picos recurrentes que podrían coincidir con períodos específicos del Anio, como festividades o ciclos económicos. A partir de 2015, el crecimiento se intensifica, alcanzando valores máximos históricos en 2020, posiblemente debido a factores externos como crisis económicas globales que incentivaron el envío de remesas. La tendencia general sugiere que las remesas son una fuente económica cada vez más importante para el país.</p>
+</div>
+<div id="análisis-estacionalidad" class="section level2 hasAnchor" number="2.3">
+<h2><span class="header-section-number">2.3</span> Análisis Estacionalidad<a href="preparación-de-los-datos.html#análisis-estacionalidad" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="preparación-de-los-datos.html#cb10-1" tabindex="-1"></a><span class="co"># Crear una serie temporal</span></span>
+<span id="cb10-2"><a href="preparación-de-los-datos.html#cb10-2" tabindex="-1"></a>ts_remesas <span class="ot">&lt;-</span> <span class="fu">ts</span>(df<span class="sc">$</span>Remesas, <span class="at">start =</span> <span class="fu">c</span>(<span class="fu">year</span>(<span class="fu">min</span>(df<span class="sc">$</span>Fecha)), <span class="fu">month</span>(<span class="fu">min</span>(df<span class="sc">$</span>Fecha))), <span class="at">frequency =</span> <span class="dv">12</span>)</span>
+<span id="cb10-3"><a href="preparación-de-los-datos.html#cb10-3" tabindex="-1"></a></span>
+<span id="cb10-4"><a href="preparación-de-los-datos.html#cb10-4" tabindex="-1"></a><span class="co"># Descomposición de la serie temporal</span></span>
+<span id="cb10-5"><a href="preparación-de-los-datos.html#cb10-5" tabindex="-1"></a>descomposicion <span class="ot">&lt;-</span> <span class="fu">stl</span>(ts_remesas, <span class="at">s.window =</span> <span class="st">&quot;periodic&quot;</span>)</span>
+<span id="cb10-6"><a href="preparación-de-los-datos.html#cb10-6" tabindex="-1"></a><span class="fu">plot</span>(descomposicion, <span class="at">main =</span> <span class="st">&quot;Descomposición de la Serie Temporal&quot;</span>)</span></code></pre></div>
+</details>
+<p><img src="_main_files/figure-html/unnamed-chunk-5-1.png" /><!-- -->
+La descomposición de la serie temporal muestra tres componentes clave: la tendencia, la estacionalidad y los residuos. La tendencia evidencia un crecimiento sostenido en los ingresos por remesas desde el Anio 2000, con una aceleración notable a partir de 2015. El componente estacional muestra un patrón cíclico recurrente, indicando variaciones regulares en los ingresos a lo largo del Anio, posiblemente vinculadas a eventos como festividades o períodos específicos de mayor envío. Los residuos son relativamente pequeños y están distribuidos de manera uniforme, lo que sugiere que el modelo capta adecuadamente la mayoría de los patrones de la serie. Este análisis confirma que los ingresos por remesas han seguido una trayectoria positiva y predecible, con pequeñas fluctuaciones impredecibles.</p>
+</div>
+<div id="visualización-comparativa-mensual" class="section level2 hasAnchor" number="2.4">
+<h2><span class="header-section-number">2.4</span> Visualización comparativa mensual<a href="preparación-de-los-datos.html#visualización-comparativa-mensual" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="preparación-de-los-datos.html#cb11-1" tabindex="-1"></a><span class="co"># Crear una columna de mes</span></span>
+<span id="cb11-2"><a href="preparación-de-los-datos.html#cb11-2" tabindex="-1"></a>df <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">Mes =</span> <span class="fu">month</span>(Fecha, <span class="at">label =</span> <span class="cn">TRUE</span>, <span class="at">abbr =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb11-3"><a href="preparación-de-los-datos.html#cb11-3" tabindex="-1"></a></span>
+<span id="cb11-4"><a href="preparación-de-los-datos.html#cb11-4" tabindex="-1"></a><span class="co"># Gráfico tipo boxplot por mes</span></span>
+<span id="cb11-5"><a href="preparación-de-los-datos.html#cb11-5" tabindex="-1"></a><span class="fu">ggplot</span>(df, <span class="fu">aes</span>(<span class="at">x =</span> Mes, <span class="at">y =</span> Remesas)) <span class="sc">+</span></span>
+<span id="cb11-6"><a href="preparación-de-los-datos.html#cb11-6" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">fill =</span> <span class="st">&quot;lightblue&quot;</span>, <span class="at">outlier.colour =</span> <span class="st">&quot;red&quot;</span>) <span class="sc">+</span></span>
+<span id="cb11-7"><a href="preparación-de-los-datos.html#cb11-7" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Distribución Mensual de Remesas&quot;</span>,</span>
+<span id="cb11-8"><a href="preparación-de-los-datos.html#cb11-8" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">&quot;Mes&quot;</span>,</span>
+<span id="cb11-9"><a href="preparación-de-los-datos.html#cb11-9" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">&quot;Ingresos (millones)&quot;</span>) <span class="sc">+</span></span>
+<span id="cb11-10"><a href="preparación-de-los-datos.html#cb11-10" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div>
+</details>
+<p><img src="figure-html/unnamed-chunk-6-1.png" /><!-- --></p>
+<p>El gráfico de cajas muestra la distribución mensual de los ingresos por remesas, revelando variaciones en su comportamiento a lo largo del Anio. Aunque la mediana y los rangos intercuartílicos son relativamente estables entre meses, algunos como marzo, mayo y noviembre destacan por presentar valores atípicos superiores (puntos rojos), indicando ingresos excepcionalmente altos en esos meses. Esto podría estar relacionado con factores estacionales o eventos específicos que impulsan el envío de remesas. La variabilidad es ligeramente mayor en los meses mencionados, mientras que en otros como junio, julio y septiembre se observa una distribución más compacta y consistente. Estos patrones podrían ser útiles para anticipar períodos de mayor flujo económico por remesas.</p>
+</div>
+<div id="análisis-de-tendencias-anuales" class="section level2 hasAnchor" number="2.5">
+<h2><span class="header-section-number">2.5</span> Análisis de tendencias Anuales<a href="preparación-de-los-datos.html#análisis-de-tendencias-anuales" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="preparación-de-los-datos.html#cb12-1" tabindex="-1"></a>df_anual <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span></span>
+<span id="cb12-2"><a href="preparación-de-los-datos.html#cb12-2" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Anio =</span> <span class="fu">year</span>(Fecha)) <span class="sc">%&gt;%</span>  <span class="co"># Extraer el Anio de la columna Fecha</span></span>
+<span id="cb12-3"><a href="preparación-de-los-datos.html#cb12-3" tabindex="-1"></a>  <span class="fu">group_by</span>(Anio) <span class="sc">%&gt;%</span>  <span class="co"># Agrupar por Anio</span></span>
+<span id="cb12-4"><a href="preparación-de-los-datos.html#cb12-4" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">Promedio_Anual =</span> <span class="fu">mean</span>(Remesas, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))  <span class="co"># Calcular promedio anual</span></span>
+<span id="cb12-5"><a href="preparación-de-los-datos.html#cb12-5" tabindex="-1"></a></span>
+<span id="cb12-6"><a href="preparación-de-los-datos.html#cb12-6" tabindex="-1"></a><span class="co"># Gráfico de la evolución anual</span></span>
+<span id="cb12-7"><a href="preparación-de-los-datos.html#cb12-7" tabindex="-1"></a><span class="fu">ggplot</span>(df_anual, <span class="fu">aes</span>(<span class="at">x =</span> Anio, <span class="at">y =</span> Promedio_Anual)) <span class="sc">+</span></span>
+<span id="cb12-8"><a href="preparación-de-los-datos.html#cb12-8" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">color =</span> <span class="st">&quot;blue&quot;</span>, <span class="at">linewidth =</span> <span class="fl">1.2</span>) <span class="sc">+</span>  <span class="co"># Línea de tendencia</span></span>
+<span id="cb12-9"><a href="preparación-de-los-datos.html#cb12-9" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">color =</span> <span class="st">&quot;red&quot;</span>, <span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span>  <span class="co"># Puntos destacados para cada Anio</span></span>
+<span id="cb12-10"><a href="preparación-de-los-datos.html#cb12-10" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb12-11"><a href="preparación-de-los-datos.html#cb12-11" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">&quot;Evolución Anual de los Ingresos por Remesas&quot;</span>,</span>
+<span id="cb12-12"><a href="preparación-de-los-datos.html#cb12-12" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">&quot;Anio&quot;</span>,</span>
+<span id="cb12-13"><a href="preparación-de-los-datos.html#cb12-13" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">&quot;Promedio Anual (millones)&quot;</span></span>
+<span id="cb12-14"><a href="preparación-de-los-datos.html#cb12-14" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb12-15"><a href="preparación-de-los-datos.html#cb12-15" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">15</span>) <span class="sc">+</span>  <span class="co"># Tema limpio con fuente mejorada</span></span>
+<span id="cb12-16"><a href="preparación-de-los-datos.html#cb12-16" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb12-17"><a href="preparación-de-los-datos.html#cb12-17" tabindex="-1"></a>    <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>, <span class="at">face =</span> <span class="st">&quot;bold&quot;</span>),  <span class="co"># Centrar y resaltar título</span></span>
+<span id="cb12-18"><a href="preparación-de-los-datos.html#cb12-18" tabindex="-1"></a>    <span class="at">axis.text =</span> <span class="fu">element_text</span>(<span class="at">color =</span> <span class="st">&quot;black&quot;</span>),  <span class="co"># Texto de ejes en negro</span></span>
+<span id="cb12-19"><a href="preparación-de-los-datos.html#cb12-19" tabindex="-1"></a>    <span class="at">axis.title =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">&quot;bold&quot;</span>)  <span class="co"># Resaltar títulos de ejes</span></span>
+<span id="cb12-20"><a href="preparación-de-los-datos.html#cb12-20" tabindex="-1"></a>  )</span></code></pre></div>
+</details>
+<p><img src="figure-html/unnamed-chunk-7-1.png" /><!-- --></p>
+<p>El gráfico muestra una tendencia ascendente en el promedio anual de ingresos por remesas desde el Anio 2000 hasta 2020. Durante los primeros Anios de la serie (2000-2005), se observa un crecimiento moderado pero constante. A partir de 2005, el crecimiento se acelera, aunque entre 2010 y 2015 el aumento es más estable, lo que podría estar relacionado con factores económicos globales o locales. Sin embargo, desde 2015 hasta 2019, el promedio anual experimenta un incremento significativo, alcanzando un máximo histórico cercano a los 550 millones en 2019. En 2020, se observa una leve disminución, posiblemente atribuible a factores excepcionales como la pandemia de COVID-19. Este análisis confirma la importancia creciente de las remesas como fuente de ingresos, con un patrón general de fortalecimiento sostenido a lo largo del tiempo.</p>
+<p><strong>Conclusiones</strong></p>
+<p>Se identificó una clara tendencia ascendente en las remesas, con picos en ciertos meses como marzo, mayo y noviembre, probablemente asociados a factores estacionales o eventos específicos. La descomposición de la serie temporal mostró un patrón estacional recurrente y una tendencia al alza que se intensificó a partir de 2015. Además, el análisis anual confirmó este crecimiento, alcanzando máximos históricos en 2019, aunque con una leve disminución en 2020, posiblemente por la pandemia. En general, el comportamiento de las remesas refleja su creciente importancia para la economía, con ciclos estacionales y un patrón a largo plazo que sugiere estabilidad y resiliencia frente a cambios globales</p>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

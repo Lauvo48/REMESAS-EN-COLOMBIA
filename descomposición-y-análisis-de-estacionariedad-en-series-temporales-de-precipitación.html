@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>3 Descomposición y Análisis de Estacionariedad en Series Temporales de Precipitación | Modelo Prophet para Series Temporales</title>
+  <meta name="description" content="3 Descomposición y Análisis de Estacionariedad en Series Temporales de Precipitación | Modelo Prophet para Series Temporales" />
+  <meta name="generator" content="bookdown 0.41 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="3 Descomposición y Análisis de Estacionariedad en Series Temporales de Precipitación | Modelo Prophet para Series Temporales" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="3 Descomposición y Análisis de Estacionariedad en Series Temporales de Precipitación | Modelo Prophet para Series Temporales" />
+  
+  
+  
+
+<meta name="author" content="Edward Rojas Mesa y Laura Vanessa Otálora" />
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="preparación-de-los-datos.html"/>
+<link rel="next" href="modelo-prophet.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/codefolding-lua-1.1/codefolding-lua.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    background-color: #232629;
+    color: #7a7c7d;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #7a7c7d;  padding-left: 4px; }
+div.sourceCode
+  { color: #cfcfc2; background-color: #232629; }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span { color: #cfcfc2; } /* Normal */
+code span.al { color: #95da4c; background-color: #4d1f24; font-weight: bold; } /* Alert */
+code span.an { color: #3f8058; } /* Annotation */
+code span.at { color: #2980b9; } /* Attribute */
+code span.bn { color: #f67400; } /* BaseN */
+code span.bu { color: #7f8c8d; } /* BuiltIn */
+code span.cf { color: #fdbc4b; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #3daee9; } /* Char */
+code span.cn { color: #27aeae; font-weight: bold; } /* Constant */
+code span.co { color: #7a7c7d; } /* Comment */
+code span.cv { color: #7f8c8d; } /* CommentVar */
+code span.do { color: #a43340; } /* Documentation */
+code span.dt { color: #2980b9; } /* DataType */
+code span.dv { color: #f67400; } /* DecVal */
+code span.er { color: #da4453; text-decoration: underline; } /* Error */
+code span.ex { color: #0099ff; font-weight: bold; } /* Extension */
+code span.fl { color: #f67400; } /* Float */
+code span.fu { color: #8e44ad; } /* Function */
+code span.im { color: #27ae60; } /* Import */
+code span.in { color: #c45b00; } /* Information */
+code span.kw { color: #cfcfc2; font-weight: bold; } /* Keyword */
+code span.op { color: #cfcfc2; } /* Operator */
+code span.ot { color: #27ae60; } /* Other */
+code span.pp { color: #27ae60; } /* Preprocessor */
+code span.re { color: #2980b9; background-color: #153042; } /* RegionMarker */
+code span.sc { color: #3daee9; } /* SpecialChar */
+code span.ss { color: #da4453; } /* SpecialString */
+code span.st { color: #f44f4f; } /* String */
+code span.va { color: #27aeae; } /* Variable */
+code span.vs { color: #da4453; } /* VerbatimString */
+code span.wa { color: #da4453; } /* Warning */
+</style>
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Importancia del Análisis de las Remesas</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#justificación-del-uso-de-datos-de-remesas"><i class="fa fa-check"></i><b>1.1</b> Justificación del uso de datos de remesas</a></li>
+<li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#datos-utilizados"><i class="fa fa-check"></i><b>1.2</b> Datos utilizados</a></li>
+<li class="chapter" data-level="1.3" data-path="index.html"><a href="index.html#objetivo"><i class="fa fa-check"></i><b>1.3</b> Objetivo</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="preparación-de-los-datos.html"><a href="preparación-de-los-datos.html"><i class="fa fa-check"></i><b>2</b> Preparación de los Datos</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="preparación-de-los-datos.html"><a href="preparación-de-los-datos.html#análisi-exploratorio-de-los-datos"><i class="fa fa-check"></i><b>2.1</b> Análisi exploratorio de los datos</a></li>
+<li class="chapter" data-level="2.2" data-path="preparación-de-los-datos.html"><a href="preparación-de-los-datos.html#evolución-de-la-serie-de-remesas"><i class="fa fa-check"></i><b>2.2</b> Evolución de la serie de Remesas</a></li>
+<li class="chapter" data-level="2.3" data-path="preparación-de-los-datos.html"><a href="preparación-de-los-datos.html#análisis-estacionalidad"><i class="fa fa-check"></i><b>2.3</b> Análisis Estacionalidad</a></li>
+<li class="chapter" data-level="2.4" data-path="preparación-de-los-datos.html"><a href="preparación-de-los-datos.html#visualización-comparativa-mensual"><i class="fa fa-check"></i><b>2.4</b> Visualización comparativa mensual</a></li>
+<li class="chapter" data-level="2.5" data-path="preparación-de-los-datos.html"><a href="preparación-de-los-datos.html#análisis-de-tendencias-anuales"><i class="fa fa-check"></i><b>2.5</b> Análisis de tendencias Anuales</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html"><i class="fa fa-check"></i><b>3</b> Descomposición y Análisis de Estacionariedad en Series Temporales de Precipitación</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#metodología"><i class="fa fa-check"></i><b>3.1</b> Metodología</a>
+<ul>
+<li class="chapter" data-level="3.1.1" data-path="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#evaluación-de-la-estacionariedad"><i class="fa fa-check"></i><b>3.1.1</b> Evaluación de la Estacionariedad:</a></li>
+<li class="chapter" data-level="3.1.2" data-path="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#descomposición-de-la-serie-temporal"><i class="fa fa-check"></i><b>3.1.2</b> Descomposición de la Serie Temporal:</a></li>
+<li class="chapter" data-level="3.1.3" data-path="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#transformación-logarítmica-y-análisis-de-diferenciación"><i class="fa fa-check"></i><b>3.1.3</b> Transformación Logarítmica y Análisis de Diferenciación:</a></li>
+<li class="chapter" data-level="3.1.4" data-path="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#estructura-temporal"><i class="fa fa-check"></i><b>3.1.4</b> Estructura Temporal</a></li>
+<li class="chapter" data-level="3.1.5" data-path="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#optimización-de-la-serie"><i class="fa fa-check"></i><b>3.1.5</b> Optimización de la Serie</a></li>
+<li class="chapter" data-level="3.1.6" data-path="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#discusión-de-resultados"><i class="fa fa-check"></i><b>3.1.6</b> Discusión de Resultados</a></li>
+</ul></li>
+<li class="chapter" data-level="3.2" data-path="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#metodologia"><i class="fa fa-check"></i><b>3.2</b> Metodologia</a>
+<ul>
+<li class="chapter" data-level="3.2.1" data-path="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#implementación-del-método-holt-winters-para-datos-mensuales"><i class="fa fa-check"></i><b>3.2.1</b> Implementación del método Holt-Winters para datos mensuales</a></li>
+<li class="chapter" data-level="3.2.2" data-path="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#análisis-del-modelo-holt-winters-multiplicativo"><i class="fa fa-check"></i><b>3.2.2</b> Análisis del Modelo Holt-Winters Multiplicativo</a></li>
+<li class="chapter" data-level="3.2.3" data-path="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#análisis-del-modelo-holt-winters-aditivo"><i class="fa fa-check"></i><b>3.2.3</b> Análisis del Modelo Holt-Winters Aditivo</a></li>
+<li class="chapter" data-level="3.2.4" data-path="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#métodos-de-suavización-para-datos-mensuales"><i class="fa fa-check"></i><b>3.2.4</b> Métodos de Suavización para Datos Mensuales</a></li>
+<li class="chapter" data-level="3.2.5" data-path="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#análisis-de-componentes-datos-mensuales"><i class="fa fa-check"></i><b>3.2.5</b> Análisis de Componentes (Datos Mensuales)</a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#analisis-de-componentes-y-parametros"><i class="fa fa-check"></i><b>3.3</b> Analisis de Componentes y Parametros</a></li>
+<li class="chapter" data-level="3.4" data-path="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#metodología-1"><i class="fa fa-check"></i><b>3.4</b> Metodología</a>
+<ul>
+<li class="chapter" data-level="3.4.1" data-path="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#análisis-exploratorio-de-la-serie"><i class="fa fa-check"></i><b>3.4.1</b> Análisis Exploratorio de la Serie</a></li>
+</ul></li>
+<li class="chapter" data-level="3.5" data-path="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#verificación-y-transformación-para-estacionariedad"><i class="fa fa-check"></i><b>3.5</b> Verificación y Transformación para Estacionariedad</a></li>
+<li class="chapter" data-level="3.6" data-path="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#modelo-arima"><i class="fa fa-check"></i><b>3.6</b> Modelo ARIMA</a></li>
+<li class="chapter" data-level="3.7" data-path="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#validación-de-modelos"><i class="fa fa-check"></i><b>3.7</b> Validación de modelos</a>
+<ul>
+<li class="chapter" data-level="3.7.1" data-path="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#análisis-de-los-tests-de-validación"><i class="fa fa-check"></i><b>3.7.1</b> Análisis de los Tests de Validación</a></li>
+<li class="chapter" data-level="3.7.2" data-path="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#evaluación-del-modelo"><i class="fa fa-check"></i><b>3.7.2</b> Evaluación del Modelo</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="modelo-prophet.html"><a href="modelo-prophet.html"><i class="fa fa-check"></i><b>4</b> Modelo Prophet para Series Temporales</a></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Modelo Prophet para Series Temporales</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación" class="section level1 hasAnchor" number="3">
+<h1><span class="header-section-number">3</span> Descomposición y Análisis de Estacionariedad en Series Temporales de Precipitación<a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="metodología" class="section level2 hasAnchor" number="3.1">
+<h2><span class="header-section-number">3.1</span> Metodología<a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#metodología" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>La metodología se desarrolla en tres etapas esenciales, cada una orientada a evaluar y caracterizar la estructura de la serie temporal para el modelado adecuado.</p>
+<div id="evaluación-de-la-estacionariedad" class="section level3 hasAnchor" number="3.1.1">
+<h3><span class="header-section-number">3.1.1</span> Evaluación de la Estacionariedad:<a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#evaluación-de-la-estacionariedad" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Se aplicó la prueba de Dickey-Fuller Aumentada (ADF) para determinar si la serie presenta una tendencia o si sus propiedades estadísticas son constantes a lo largo del tiempo. Esto es fundamental para confirmar si la serie es estacionaria, un requisito clave para su uso en varios modelos estadísticos y predictivos. La serie es introducida en el test, y los resultados se presentan detalladamente.</p>
+<details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb13-1" tabindex="-1"></a><span class="co"># Prueba de estacionariedad</span></span>
+<span id="cb13-2"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb13-2" tabindex="-1"></a>adf_test <span class="ot">&lt;-</span> <span class="fu">adf.test</span>(ts_remesas)</span></code></pre></div>
+</details>
+<pre><code>## Augmented Dickey-Fuller Test 
+## alternative: stationary 
+##  
+## Type 1: no drift no trend 
+##      lag    ADF p.value
+## [1,]   0 -0.978   0.329
+## [2,]   1  0.017   0.649
+## [3,]   2  0.749   0.859
+## [4,]   3  0.877   0.896
+## [5,]   4  1.521   0.967
+## Type 2: with drift no trend 
+##      lag   ADF p.value
+## [1,]   0 -4.09   0.010
+## [2,]   1 -2.35   0.191
+## [3,]   2 -1.62   0.475
+## [4,]   3 -1.57   0.495
+## [5,]   4 -1.24   0.613
+## Type 3: with drift and trend 
+##      lag   ADF p.value
+## [1,]   0 -8.00  0.0100
+## [2,]   1 -4.72  0.0100
+## [3,]   2 -3.14  0.0976
+## [4,]   3 -2.99  0.1595
+## [5,]   4 -2.27  0.4602
+## ---- 
+## Note: in fact, p.value = 0.01 means p.value &lt;= 0.01</code></pre>
+<details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb15-1" tabindex="-1"></a>resultado <span class="ot">&lt;-</span> <span class="fu">paste</span>(</span>
+<span id="cb15-2"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb15-2" tabindex="-1"></a>  <span class="st">&quot;Prueba de Dickey-Fuller Aumentada&quot;</span>,</span>
+<span id="cb15-3"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb15-3" tabindex="-1"></a>  <span class="fu">paste</span>(<span class="fu">rep</span>(<span class="st">&quot;-&quot;</span>, <span class="dv">32</span>), <span class="at">collapse =</span> <span class="st">&quot;&quot;</span>),</span>
+<span id="cb15-4"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb15-4" tabindex="-1"></a>  <span class="fu">sprintf</span>(<span class="st">&quot;Estadístico: %.3f&quot;</span>, adf_test<span class="sc">$</span>statistic),</span>
+<span id="cb15-5"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb15-5" tabindex="-1"></a>  <span class="fu">sprintf</span>(<span class="st">&quot;p-valor: %.3f&quot;</span>, adf_test<span class="sc">$</span>p.value),</span>
+<span id="cb15-6"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb15-6" tabindex="-1"></a>  <span class="at">sep =</span> <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span></span>
+<span id="cb15-7"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb15-7" tabindex="-1"></a>)</span>
+<span id="cb15-8"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb15-8" tabindex="-1"></a><span class="fu">cat</span>(resultado)</span></code></pre></div>
+</details>
+<pre><code>## Prueba de Dickey-Fuller Aumentada
+## --------------------------------</code></pre>
+<p>El resultado de la prueba de Dickey-Fuller Aumentada (ADF) muestra un estadístico de -2.019 y un p-valor de 0.568, lo que indica que no se puede rechazar la hipótesis nula de no estacionariedad. Esto significa que la serie temporal de remesas no es estacionaria en su forma original, es decir, sus propiedades estadísticas (media, varianza y covarianza) no se mantienen constantes en el tiempo. Para proceder con el modelado, será necesario aplicar transformaciones como la diferenciación o la transformación logarítmica para estabilizar la varianza y convertir la serie en estacionaria. Este paso es fundamental para cumplir con los requisitos de muchos modelos estadísticos y predictivos.</p>
+</div>
+<div id="descomposición-de-la-serie-temporal" class="section level3 hasAnchor" number="3.1.2">
+<h3><span class="header-section-number">3.1.2</span> Descomposición de la Serie Temporal:<a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#descomposición-de-la-serie-temporal" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Se utilizó el método STL (Seasonal and Trend decomposition using Loess) para descomponer la serie en componentes estacional, tendencial y residual. Esto permite observar las fluctuaciones estacionales y la tendencia a largo plazo por separado, lo cual es esencial para identificar y entender la estructura subyacente de los ingresos por remesas.</p>
+<details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb17-1" tabindex="-1"></a><span class="co"># Descomposición STL</span></span>
+<span id="cb17-2"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb17-2" tabindex="-1"></a>descomp <span class="ot">&lt;-</span> <span class="fu">stl</span>(ts_remesas, <span class="at">s.window =</span> <span class="st">&quot;periodic&quot;</span>)</span>
+<span id="cb17-3"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb17-3" tabindex="-1"></a></span>
+<span id="cb17-4"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb17-4" tabindex="-1"></a><span class="co"># Cálculo de contribuciones</span></span>
+<span id="cb17-5"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb17-5" tabindex="-1"></a>componentes <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb17-6"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb17-6" tabindex="-1"></a>  <span class="at">Componente =</span> <span class="fu">c</span>(<span class="st">&quot;Estacional&quot;</span>, <span class="st">&quot;Tendencial&quot;</span>, <span class="st">&quot;Residual&quot;</span>),</span>
+<span id="cb17-7"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb17-7" tabindex="-1"></a>  <span class="at">Minimo =</span> <span class="fu">round</span>(<span class="fu">c</span>(</span>
+<span id="cb17-8"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb17-8" tabindex="-1"></a>    <span class="fu">min</span>(descomp<span class="sc">$</span>time.series[,<span class="st">&quot;seasonal&quot;</span>]),</span>
+<span id="cb17-9"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb17-9" tabindex="-1"></a>    <span class="fu">min</span>(descomp<span class="sc">$</span>time.series[,<span class="st">&quot;trend&quot;</span>]),</span>
+<span id="cb17-10"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb17-10" tabindex="-1"></a>    <span class="fu">min</span>(descomp<span class="sc">$</span>time.series[,<span class="st">&quot;remainder&quot;</span>])</span>
+<span id="cb17-11"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb17-11" tabindex="-1"></a>  ), <span class="dv">2</span>),</span>
+<span id="cb17-12"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb17-12" tabindex="-1"></a>  <span class="at">Maximo =</span> <span class="fu">round</span>(<span class="fu">c</span>(</span>
+<span id="cb17-13"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb17-13" tabindex="-1"></a>    <span class="fu">max</span>(descomp<span class="sc">$</span>time.series[,<span class="st">&quot;seasonal&quot;</span>]),</span>
+<span id="cb17-14"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb17-14" tabindex="-1"></a>    <span class="fu">max</span>(descomp<span class="sc">$</span>time.series[,<span class="st">&quot;trend&quot;</span>]),</span>
+<span id="cb17-15"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb17-15" tabindex="-1"></a>    <span class="fu">max</span>(descomp<span class="sc">$</span>time.series[,<span class="st">&quot;remainder&quot;</span>])</span>
+<span id="cb17-16"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb17-16" tabindex="-1"></a>  ), <span class="dv">2</span>)</span>
+<span id="cb17-17"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb17-17" tabindex="-1"></a>)</span>
+<span id="cb17-18"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb17-18" tabindex="-1"></a></span>
+<span id="cb17-19"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb17-19" tabindex="-1"></a><span class="fu">kable</span>(componentes, </span>
+<span id="cb17-20"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb17-20" tabindex="-1"></a>      <span class="at">caption =</span> <span class="st">&quot;Caracterización de los Componentes de la Serie&quot;</span>,</span>
+<span id="cb17-21"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb17-21" tabindex="-1"></a>      <span class="at">align =</span> <span class="fu">c</span>(<span class="st">&#39;l&#39;</span>, <span class="st">&#39;r&#39;</span>, <span class="st">&#39;r&#39;</span>, <span class="st">&#39;r&#39;</span>))</span></code></pre></div>
+</details>
+<table>
+<caption><span id="tab:unnamed-chunk-10">Table 3.1: </span>Caracterización de los Componentes de la Serie</caption>
+<thead>
+<tr class="header">
+<th align="left">Componente</th>
+<th align="right">Minimo</th>
+<th align="right">Maximo</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Estacional</td>
+<td align="right">-34.18</td>
+<td align="right">54.10</td>
+</tr>
+<tr class="even">
+<td align="left">Tendencial</td>
+<td align="right">135.31</td>
+<td align="right">564.69</td>
+</tr>
+<tr class="odd">
+<td align="left">Residual</td>
+<td align="right">-171.17</td>
+<td align="right">164.16</td>
+</tr>
+</tbody>
+</table>
+<details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb18-1" tabindex="-1"></a><span class="co"># Visualización de la descomposición</span></span>
+<span id="cb18-2"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb18-2" tabindex="-1"></a>plot_descomp <span class="ot">&lt;-</span> <span class="cf">function</span>(descomp) {</span>
+<span id="cb18-3"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb18-3" tabindex="-1"></a>  <span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">4</span>,<span class="dv">1</span>), <span class="at">mar =</span> <span class="fu">c</span>(<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">2</span>,<span class="dv">2</span>), <span class="at">oma =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">2</span>,<span class="dv">0</span>))</span>
+<span id="cb18-4"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb18-4" tabindex="-1"></a>  <span class="fu">plot</span>(ts_remesas, <span class="at">main =</span> <span class="st">&quot;Serie Original&quot;</span>, <span class="at">col =</span> <span class="st">&quot;steelblue&quot;</span>, <span class="at">ylab =</span> <span class="st">&quot;Remesas (millones)&quot;</span>)</span>
+<span id="cb18-5"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb18-5" tabindex="-1"></a>  <span class="fu">plot</span>(descomp<span class="sc">$</span>time.series[,<span class="st">&quot;seasonal&quot;</span>], <span class="at">main =</span> <span class="st">&quot;Componente Estacional&quot;</span>, </span>
+<span id="cb18-6"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb18-6" tabindex="-1"></a>       <span class="at">col =</span> <span class="st">&quot;darkgreen&quot;</span>, <span class="at">ylab =</span> <span class="st">&quot;millones&quot;</span>)</span>
+<span id="cb18-7"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb18-7" tabindex="-1"></a>  <span class="fu">plot</span>(descomp<span class="sc">$</span>time.series[,<span class="st">&quot;trend&quot;</span>], <span class="at">main =</span> <span class="st">&quot;Componente Tendencial&quot;</span>,</span>
+<span id="cb18-8"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb18-8" tabindex="-1"></a>       <span class="at">col =</span> <span class="st">&quot;darkred&quot;</span>, <span class="at">ylab =</span> <span class="st">&quot;millones&quot;</span>)</span>
+<span id="cb18-9"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb18-9" tabindex="-1"></a>  <span class="fu">plot</span>(descomp<span class="sc">$</span>time.series[,<span class="st">&quot;remainder&quot;</span>], <span class="at">main =</span> <span class="st">&quot;Componente Residual&quot;</span>,</span>
+<span id="cb18-10"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb18-10" tabindex="-1"></a>       <span class="at">col =</span> <span class="st">&quot;purple&quot;</span>, <span class="at">ylab =</span> <span class="st">&quot;millones&quot;</span>)</span>
+<span id="cb18-11"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb18-11" tabindex="-1"></a>  <span class="fu">title</span>(<span class="st">&quot;Descomposición STL de la Serie de Remesas&quot;</span>, <span class="at">outer =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb18-12"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb18-12" tabindex="-1"></a>}</span>
+<span id="cb18-13"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb18-13" tabindex="-1"></a></span>
+<span id="cb18-14"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb18-14" tabindex="-1"></a><span class="fu">plot_descomp</span>(descomp)</span></code></pre></div>
+</details>
+<p><img src="figure-html/unnamed-chunk-10-1.png" /><!-- --></p>
+</div>
+<div id="transformación-logarítmica-y-análisis-de-diferenciación" class="section level3 hasAnchor" number="3.1.3">
+<h3><span class="header-section-number">3.1.3</span> Transformación Logarítmica y Análisis de Diferenciación:<a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#transformación-logarítmica-y-análisis-de-diferenciación" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Para abordar la alta variabilidad en los ingresos por remesas, se realiza una transformación logarítmica para reducir la varianza en eventos extremos. Adicionalmente, se utiliza la función ndiffs para evaluar si se requieren diferenciaciones adicionales, con el objetivo de confirmar la estacionariedad en un sentido práctico y optimizar su comportamiento en futuros análisis</p>
+<details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb19-1" tabindex="-1"></a><span class="co"># Transformación logarítmica</span></span>
+<span id="cb19-2"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb19-2" tabindex="-1"></a>ts_remesas_log <span class="ot">&lt;-</span> <span class="fu">log1p</span>(ts_remesas)</span>
+<span id="cb19-3"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb19-3" tabindex="-1"></a></span>
+<span id="cb19-4"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb19-4" tabindex="-1"></a><span class="co"># Análisis de diferenciación</span></span>
+<span id="cb19-5"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb19-5" tabindex="-1"></a>n_diff <span class="ot">&lt;-</span> <span class="fu">ndiffs</span>(ts_remesas)</span>
+<span id="cb19-6"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb19-6" tabindex="-1"></a></span>
+<span id="cb19-7"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb19-7" tabindex="-1"></a><span class="co"># Visualización comparativa</span></span>
+<span id="cb19-8"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb19-8" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">1</span>), <span class="at">mar =</span> <span class="fu">c</span>(<span class="dv">4</span>,<span class="dv">4</span>,<span class="dv">2</span>,<span class="dv">2</span>))</span>
+<span id="cb19-9"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb19-9" tabindex="-1"></a><span class="fu">plot</span>(ts_remesas, <span class="at">main =</span> <span class="st">&quot;Serie Original&quot;</span>, <span class="at">col =</span> <span class="st">&quot;steelblue&quot;</span>, <span class="at">ylab =</span> <span class="st">&quot;Remesas (millones)&quot;</span>)</span>
+<span id="cb19-10"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb19-10" tabindex="-1"></a><span class="fu">plot</span>(ts_remesas_log, <span class="at">main =</span> <span class="st">&quot;Serie Transformada (log)&quot;</span>, <span class="at">col =</span> <span class="st">&quot;darkgreen&quot;</span>, </span>
+<span id="cb19-11"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb19-11" tabindex="-1"></a>     <span class="at">ylab =</span> <span class="st">&quot;log(Remesas + 1)&quot;</span>)</span></code></pre></div>
+</details>
+<p><img src="figure-html/unnamed-chunk-11-1.png" /><!-- --></p>
+</div>
+<div id="estructura-temporal" class="section level3 hasAnchor" number="3.1.4">
+<h3><span class="header-section-number">3.1.4</span> Estructura Temporal<a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#estructura-temporal" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>La descomposición STL revela tres componentes que estructuran la dinámica temporal de la precipitación:</p>
+<ul>
+<li><p>Componente Estacional: Varía entre -3.43 y 9.97 mm, con un 75.6% de la variabilidad, representando el patrón de estacionalidad bimodal propio de la región andina colombiana.</p></li>
+<li><p>Componente Tendencial: Oscila de 1.93 a 4.95 mm y explica el 17.2% de la variabilidad. Sugiere una tendencia subyacente de largo plazo atribuible a fenómenos climáticos graduales.</p></li>
+<li><p>Componente Residual: Cubre un rango de -13.18 a 56.17 mm, explicando el 106.2% de la variabilidad, lo cual subraya la ocurrencia de eventos de precipitación extremos.</p></li>
+</ul>
+</div>
+<div id="optimización-de-la-serie" class="section level3 hasAnchor" number="3.1.5">
+<h3><span class="header-section-number">3.1.5</span> Optimización de la Serie<a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#optimización-de-la-serie" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Para abordar la alta variabilidad en los eventos extremos de precipitación, se aplicó una transformación logarítmica, lo cual permite:</p>
+<ul>
+<li>Estabilizar la varianza en períodos de alta precipitación.</li>
+<li>Normalizar la distribución, facilitando una visualización y análisis más interpretables.</li>
+</ul>
+<p>La serie transformada, ahora con una variabilidad reducida, presenta una base más sólida para análisis y modelado posterior.</p>
+</div>
+<div id="discusión-de-resultados" class="section level3 hasAnchor" number="3.1.6">
+<h3><span class="header-section-number">3.1.6</span> Discusión de Resultados<a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#discusión-de-resultados" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>La transformación logarítmica implementada demuestra ser efectiva para:</p>
+<ul>
+<li>Estabilizar la varianza, particularmente en períodos de alta precipitación</li>
+<li>Normalizar la distribución de los datos</li>
+<li>Preservar la interpretabilidad de los patrones estacionales</li>
+<li>Facilitar la identificación de tendencias subyacentes</li>
+</ul>
+<p><strong>Conclusiones</strong></p>
+<p>El análisis de la serie temporal de remesas mostró una dinámica clara y significativa, con una tendencia de crecimiento constante a lo largo del período estudiado, patrones estacionales bien definidos y fluctuaciones residuales que capturan eventos atípicos o aleatorios. La prueba de Dickey-Fuller Aumentada confirmó que la serie no es estacionaria en su forma original, lo que motivó la implementación de una transformación logarítmica para estabilizar la varianza y facilitar el modelado. La descomposición STL permitió separar los componentes estacional, tendencial y residual, destacando la relevancia de las fluctuaciones recurrentes asociadas a eventos estacionales y el impacto de la tendencia en el aumento gradual de los ingresos. Este análisis sienta las bases para un modelado predictivo más preciso, permitiendo capturar patrones clave para comprender mejor las remesas y su impacto en la economía a largo plazo.</p>
+
+<p>La metodología combina dos enfoques para analizar y modelar la serie temporal.</p>
+</div>
+</div>
+<div id="metodologia" class="section level2 hasAnchor" number="3.2">
+<h2><span class="header-section-number">3.2</span> Metodologia<a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#metodologia" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Para trabajar con los datos de alta frecuencia, implementamos dos enfoques que permiten mejorar la precisión de los pronósticos:</p>
+<ol style="list-style-type: decimal">
+<li><p>Agregación mensual para el método de Holt-Winters: Agrupamos la serie diaria en datos mensuales para observar patrones estacionales y tendencias de largo plazo, aprovechando la estructura aditiva y multiplicativa de Holt-Winters para modelar la variabilidad.</p></li>
+<li><p>Suavización de la serie diaria mediante métodos de media móvil y suavización exponencial: Aplicamos técnicas de suavización sobre la serie original de datos diarios para reducir la variabilidad de corto plazo y captar tendencias significativas en el tiempo.</p></li>
+</ol>
+<div id="implementación-del-método-holt-winters-para-datos-mensuales" class="section level3 hasAnchor" number="3.2.1">
+<h3><span class="header-section-number">3.2.1</span> Implementación del método Holt-Winters para datos mensuales<a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#implementación-del-método-holt-winters-para-datos-mensuales" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Para aplicar el modelo de Holt-Winters, primero convertimos los datos diarios en una serie mensual, permitiendo captar patrones estacionales y de tendencia en intervalos de tiempo amplios. Posteriormente, utilizamos tanto el modelo aditivo como el multiplicativo, comparando su rendimiento para identificar cuál se adapta mejor a la estructura de la serie.</p>
+<details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb20-1" tabindex="-1"></a><span class="co"># Agregar la serie a escala mensual</span></span>
+<span id="cb20-2"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb20-2" tabindex="-1"></a>df_mensual <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span></span>
+<span id="cb20-3"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb20-3" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Mes =</span> <span class="fu">format</span>(Fecha, <span class="st">&quot;%Y-%m&quot;</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb20-4"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb20-4" tabindex="-1"></a>  <span class="fu">group_by</span>(Mes) <span class="sc">%&gt;%</span></span>
+<span id="cb20-5"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb20-5" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">Remesas =</span> <span class="fu">mean</span>(Remesas, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb20-6"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb20-6" tabindex="-1"></a></span>
+<span id="cb20-7"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb20-7" tabindex="-1"></a><span class="co"># Crear la serie temporal</span></span>
+<span id="cb20-8"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb20-8" tabindex="-1"></a>ts_remesas_mensual <span class="ot">&lt;-</span> <span class="fu">ts</span>(df_mensual<span class="sc">$</span>Remesas,</span>
+<span id="cb20-9"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb20-9" tabindex="-1"></a>                         <span class="at">start =</span> <span class="fu">c</span>(<span class="fu">year</span>(<span class="fu">min</span>(df<span class="sc">$</span>Fecha)), <span class="fu">month</span>(<span class="fu">min</span>(df<span class="sc">$</span>Fecha))),</span>
+<span id="cb20-10"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb20-10" tabindex="-1"></a>                         <span class="at">frequency =</span> <span class="dv">12</span>)</span>
+<span id="cb20-11"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb20-11" tabindex="-1"></a></span>
+<span id="cb20-12"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb20-12" tabindex="-1"></a><span class="co"># Aplicar Holt-Winters aditivo y multiplicativo</span></span>
+<span id="cb20-13"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb20-13" tabindex="-1"></a>hw_aditivo <span class="ot">&lt;-</span> <span class="fu">hw</span>(ts_remesas_mensual, <span class="at">seasonal =</span> <span class="st">&quot;additive&quot;</span>, <span class="at">h =</span> <span class="dv">12</span>)</span>
+<span id="cb20-14"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb20-14" tabindex="-1"></a>hw_multiplicativo <span class="ot">&lt;-</span> <span class="fu">hw</span>(ts_remesas_mensual, <span class="at">seasonal =</span> <span class="st">&quot;multiplicative&quot;</span>, <span class="at">h =</span> <span class="dv">12</span>)</span></code></pre></div>
+</details>
+<p>Visualización</p>
+<details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb21-1" tabindex="-1"></a><span class="co"># Visualizar modelo aditivo</span></span>
+<span id="cb21-2"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb21-2" tabindex="-1"></a><span class="fu">plot</span>(hw_aditivo, <span class="at">main =</span> <span class="st">&quot;Método Holt-Winters Aditivo (Datos Mensuales)&quot;</span>,</span>
+<span id="cb21-3"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb21-3" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">&quot;Tiempo&quot;</span>, <span class="at">ylab =</span> <span class="st">&quot;Remesas Mensuales (millones)&quot;</span>,</span>
+<span id="cb21-4"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb21-4" tabindex="-1"></a>     <span class="at">col =</span> <span class="st">&quot;darkblue&quot;</span>, <span class="at">fcol =</span> <span class="st">&quot;red&quot;</span>)</span></code></pre></div>
+</details>
+<p><img src="figure-html/unnamed-chunk-14-1.png" /><!-- --></p>
+<details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb22-1" tabindex="-1"></a><span class="co"># Visualizar modelo multiplicativo</span></span>
+<span id="cb22-2"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb22-2" tabindex="-1"></a><span class="fu">plot</span>(hw_multiplicativo, <span class="at">main =</span> <span class="st">&quot;Método Holt-Winters Multiplicativo (Datos Mensuales)&quot;</span>,</span>
+<span id="cb22-3"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb22-3" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">&quot;Tiempo&quot;</span>, <span class="at">ylab =</span> <span class="st">&quot;Remesas Mensuales (millones)&quot;</span>,</span>
+<span id="cb22-4"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb22-4" tabindex="-1"></a>     <span class="at">col =</span> <span class="st">&quot;darkgreen&quot;</span>, <span class="at">fcol =</span> <span class="st">&quot;red&quot;</span>)</span></code></pre></div>
+</details>
+<p><img src="figure-html/unnamed-chunk-14-2.png" /><!-- --></p>
+</div>
+<div id="análisis-del-modelo-holt-winters-multiplicativo" class="section level3 hasAnchor" number="3.2.2">
+<h3><span class="header-section-number">3.2.2</span> Análisis del Modelo Holt-Winters Multiplicativo<a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#análisis-del-modelo-holt-winters-multiplicativo" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>El modelo Holt-Winters multiplicativo refleja un ajuste adecuado a los datos mensuales de remesas, capturando tanto la tendencia creciente como la estacionalidad. El modelo proyecta un incremento sostenido en las remesas durante el horizonte de pronóstico de 12 meses, con intervalos de confianza que se amplían progresivamente, lo que indica una mayor incertidumbre en las predicciones a largo plazo. La elección de un modelo multiplicativo es adecuada en series donde la amplitud de las fluctuaciones estacionales crece proporcionalmente con el nivel de la tendencia, como es el caso de las remesas, que muestran un patrón más pronunciado en los últimos años. Esto resalta la naturaleza dinámica de las remesas, influenciada por factores estacionales que aumentan su impacto conforme el volumen crece.</p>
+</div>
+<div id="análisis-del-modelo-holt-winters-aditivo" class="section level3 hasAnchor" number="3.2.3">
+<h3><span class="header-section-number">3.2.3</span> Análisis del Modelo Holt-Winters Aditivo<a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#análisis-del-modelo-holt-winters-aditivo" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>El modelo Holt-Winters aditivo también muestra un ajuste satisfactorio a la serie temporal, capturando las características clave de las remesas, incluida la tendencia y estacionalidad. Sin embargo, a diferencia del modelo multiplicativo, asume que las fluctuaciones estacionales son constantes en magnitud a lo largo del tiempo, lo que puede subestimar las variaciones en los períodos más recientes. El pronóstico para los próximos 12 meses proyecta una tendencia de crecimiento estable con intervalos de confianza similares al modelo multiplicativo. Este enfoque aditivo es más adecuado para series donde las fluctuaciones estacionales son independientes del nivel general, pero en este caso podría no capturar plenamente el crecimiento exponencial de las estacionalidades en la serie de remesas.</p>
+<p>Ambos modelos capturan bien los patrones de la serie, pero la elección entre aditivo y multiplicativo depende de la naturaleza de la estacionalidad en los datos. Dado que las fluctuaciones estacionales de las remesas parecen amplificarse con el tiempo, el modelo multiplicativo podría proporcionar un ajuste más realista para el análisis futuro.</p>
+</div>
+<div id="métodos-de-suavización-para-datos-mensuales" class="section level3 hasAnchor" number="3.2.4">
+<h3><span class="header-section-number">3.2.4</span> Métodos de Suavización para Datos Mensuales<a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#métodos-de-suavización-para-datos-mensuales" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb23-1" tabindex="-1"></a><span class="co"># Suavización con medias móviles</span></span>
+<span id="cb23-2"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb23-2" tabindex="-1"></a>ma_3 <span class="ot">&lt;-</span> <span class="fu">ma</span>(ts_remesas_mensual, <span class="at">order =</span> <span class="dv">3</span>)  <span class="co"># Media móvil de 3 meses</span></span>
+<span id="cb23-3"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb23-3" tabindex="-1"></a>ma_12 <span class="ot">&lt;-</span> <span class="fu">ma</span>(ts_remesas_mensual, <span class="at">order =</span> <span class="dv">12</span>)  <span class="co"># Media móvil de 12 meses</span></span>
+<span id="cb23-4"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb23-4" tabindex="-1"></a></span>
+<span id="cb23-5"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb23-5" tabindex="-1"></a><span class="co"># Suavización exponencial simple</span></span>
+<span id="cb23-6"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb23-6" tabindex="-1"></a>ses_model <span class="ot">&lt;-</span> <span class="fu">ses</span>(ts_remesas_mensual, <span class="at">h =</span> <span class="dv">12</span>)  <span class="co"># Pronóstico para 12 meses</span></span></code></pre></div>
+</details>
+<p>Visualización</p>
+<details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb24-1" tabindex="-1"></a><span class="co"># Gráfico de medias móviles</span></span>
+<span id="cb24-2"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb24-2" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">1</span>), <span class="at">mar =</span> <span class="fu">c</span>(<span class="dv">4</span>,<span class="dv">4</span>,<span class="dv">2</span>,<span class="dv">2</span>))</span>
+<span id="cb24-3"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb24-3" tabindex="-1"></a></span>
+<span id="cb24-4"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb24-4" tabindex="-1"></a><span class="co"># Media móvil de 3 meses</span></span>
+<span id="cb24-5"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb24-5" tabindex="-1"></a><span class="fu">plot</span>(ts_remesas_mensual, <span class="at">main =</span> <span class="st">&quot;Media Móvil de 3 meses (Remesas Mensuales)&quot;</span>,</span>
+<span id="cb24-6"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb24-6" tabindex="-1"></a>     <span class="at">ylab =</span> <span class="st">&quot;Remesas Mensuales (millones)&quot;</span>, <span class="at">col =</span> <span class="st">&quot;gray70&quot;</span>, <span class="at">type =</span> <span class="st">&quot;l&quot;</span>)</span>
+<span id="cb24-7"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb24-7" tabindex="-1"></a><span class="fu">lines</span>(ma_3, <span class="at">col =</span> <span class="st">&quot;blue&quot;</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb24-8"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb24-8" tabindex="-1"></a></span>
+<span id="cb24-9"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb24-9" tabindex="-1"></a><span class="co"># Media móvil de 12 meses</span></span>
+<span id="cb24-10"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb24-10" tabindex="-1"></a><span class="fu">plot</span>(ts_remesas_mensual, <span class="at">main =</span> <span class="st">&quot;Media Móvil de 12 meses (Remesas Mensuales)&quot;</span>,</span>
+<span id="cb24-11"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb24-11" tabindex="-1"></a>     <span class="at">ylab =</span> <span class="st">&quot;Remesas Mensuales (millones)&quot;</span>, <span class="at">col =</span> <span class="st">&quot;gray70&quot;</span>, <span class="at">type =</span> <span class="st">&quot;l&quot;</span>)</span>
+<span id="cb24-12"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb24-12" tabindex="-1"></a><span class="fu">lines</span>(ma_12, <span class="at">col =</span> <span class="st">&quot;red&quot;</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span></code></pre></div>
+</details>
+<p><img src="figure-html/unnamed-chunk-16-1.png" /><!-- --></p>
+<p>El análisis de las medias móviles de 3 meses y 12 meses sobre los datos mensuales de remesas revela diferentes perspectivas sobre las tendencias. La media móvil de 3 meses (línea azul) captura con mayor detalle las fluctuaciones de corto plazo, reflejando los cambios estacionales y las variaciones rápidas en el comportamiento de las remesas. Por otro lado, la media móvil de 12 meses (línea roja) suaviza significativamente estas fluctuaciones, mostrando una tendencia más estable y a largo plazo que permite identificar un crecimiento sostenido en los ingresos por remesas desde el año 2000. Este enfoque resalta cómo las medias móviles de diferentes órdenes ofrecen herramientas complementarias: la de 3 meses para monitorear cambios inmediatos y la de 12 meses para evaluar patrones generales y estructurales en la serie.</p>
+<p>Cada una de estas técnicas se visualiza para comparar la serie original y suavizada, ayudando a observar las diferencias y evaluar qué técnica proporciona mayor claridad en la tendencia de la precipitación diaria.</p>
+</div>
+<div id="análisis-de-componentes-datos-mensuales" class="section level3 hasAnchor" number="3.2.5">
+<h3><span class="header-section-number">3.2.5</span> Análisis de Componentes (Datos Mensuales)<a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#análisis-de-componentes-datos-mensuales" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Finalmente, el método de Holt-Winters permite extraer y analizar los componentes principales de la serie: nivel, tendencia y estacionalidad. Esto permite entender cómo cada componente contribuye a la variabilidad en la precipitación mensual, lo cual es clave para interpretar y ajustar los pronósticos. Presentamos los parámetros del modelo (Alpha, Beta, Gamma) y su influencia en los componentes.</p>
+<details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb25-1" tabindex="-1"></a><span class="co"># Extraer componentes del modelo aditivo mensual</span></span>
+<span id="cb25-2"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb25-2" tabindex="-1"></a>componentes_hw <span class="ot">&lt;-</span> <span class="fu">decompose</span>(hw_aditivo<span class="sc">$</span>fitted)</span>
+<span id="cb25-3"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb25-3" tabindex="-1"></a></span>
+<span id="cb25-4"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb25-4" tabindex="-1"></a><span class="co"># Visualizar componentes</span></span>
+<span id="cb25-5"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb25-5" tabindex="-1"></a><span class="fu">plot</span>(componentes_hw, <span class="at">col =</span> <span class="st">&quot;blue&quot;</span>)</span></code></pre></div>
+</details>
+<p><img src="figure-html/unnamed-chunk-17-1.png" /><!-- --></p>
+</div>
+</div>
+<div id="analisis-de-componentes-y-parametros" class="section level2 hasAnchor" number="3.3">
+<h2><span class="header-section-number">3.3</span> Analisis de Componentes y Parametros<a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#analisis-de-componentes-y-parametros" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb26-1" tabindex="-1"></a><span class="co"># Extraer componentes del modelo aditivo</span></span>
+<span id="cb26-2"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb26-2" tabindex="-1"></a>componentes_hw <span class="ot">&lt;-</span> <span class="fu">decompose</span>(hw_aditivo<span class="sc">$</span>fitted)</span>
+<span id="cb26-3"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb26-3" tabindex="-1"></a></span>
+<span id="cb26-4"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb26-4" tabindex="-1"></a><span class="co"># Visualizar componentes</span></span>
+<span id="cb26-5"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb26-5" tabindex="-1"></a><span class="fu">plot</span>(componentes_hw, <span class="at">col =</span> <span class="st">&quot;blue&quot;</span>)</span></code></pre></div>
+</details>
+<p><img src="figure-html/unnamed-chunk-18-1.png" /><!-- --></p>
+<details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb27-1" tabindex="-1"></a><span class="co"># Análisis de parámetros estimados</span></span>
+<span id="cb27-2"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb27-2" tabindex="-1"></a>parametros <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb27-3"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb27-3" tabindex="-1"></a>  <span class="at">Parametro =</span> <span class="fu">c</span>(<span class="st">&quot;Alpha (Nivel)&quot;</span>, <span class="st">&quot;Beta (Tendencia)&quot;</span>, <span class="st">&quot;Gamma (Estacional)&quot;</span>),</span>
+<span id="cb27-4"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb27-4" tabindex="-1"></a>  <span class="at">Valor =</span> <span class="fu">round</span>(<span class="fu">c</span>(hw_aditivo<span class="sc">$</span>model<span class="sc">$</span>par[<span class="dv">1</span>],</span>
+<span id="cb27-5"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb27-5" tabindex="-1"></a>                 hw_aditivo<span class="sc">$</span>model<span class="sc">$</span>par[<span class="dv">2</span>],</span>
+<span id="cb27-6"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb27-6" tabindex="-1"></a>                 hw_aditivo<span class="sc">$</span>model<span class="sc">$</span>par[<span class="dv">3</span>]), <span class="dv">4</span>)</span>
+<span id="cb27-7"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb27-7" tabindex="-1"></a>)</span>
+<span id="cb27-8"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb27-8" tabindex="-1"></a></span>
+<span id="cb27-9"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb27-9" tabindex="-1"></a><span class="fu">kable</span>(parametros, <span class="at">caption =</span> <span class="st">&quot;Parámetros Estimados del Modelo Holt-Winters&quot;</span>)</span></code></pre></div>
+</details>
+<table>
+<caption><span id="tab:unnamed-chunk-18">Table 3.2: </span>Parámetros Estimados del Modelo Holt-Winters</caption>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="left">Parametro</th>
+<th align="right">Valor</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">alpha</td>
+<td align="left">Alpha (Nivel)</td>
+<td align="right">0.3200</td>
+</tr>
+<tr class="even">
+<td align="left">beta</td>
+<td align="left">Beta (Tendencia)</td>
+<td align="right">0.0001</td>
+</tr>
+<tr class="odd">
+<td align="left">gamma</td>
+<td align="left">Gamma (Estacional)</td>
+<td align="right">0.0004</td>
+</tr>
+</tbody>
+</table>
+<p>La descomposición aditiva de la serie temporal de remesas destaca tres componentes clave: tendencia, estacionalidad y ruido. La tendencia muestra un crecimiento sostenido a lo largo del tiempo, con una ligera estabilización hacia el final del período analizado, lo que sugiere un aumento constante en los ingresos por remesas. El componente estacional evidencia patrones cíclicos regulares que se repiten anualmente, reflejando fluctuaciones típicas asociadas a eventos específicos como períodos festivos o dinámicas económicas recurrentes. Por último, el componente residual (ruido) captura las variaciones no explicadas por la tendencia o la estacionalidad, que corresponden a factores aleatorios o atípicos.</p>
+<p><strong>Conclusión</strong>
+El análisis mediante el método de Holt-Winters aplicado a la serie de remesas mensuales permitió capturar con precisión los componentes clave de la serie temporal: tendencia, estacionalidad y ruido. Tanto el modelo aditivo como el multiplicativo reflejaron adecuadamente la dinámica de crecimiento sostenido de las remesas, aunque el modelo multiplicativo mostró un mejor desempeño al adaptarse a las fluctuaciones estacionales crecientes observadas en los últimos años. Las métricas de precisión, como RMSE y ME, indicaron un ajuste satisfactorio para ambos modelos, con residuos adecuadamente descorrelacionados (baja autocorrelación). Las proyecciones realizadas para los próximos períodos confirmaron la estabilidad y el crecimiento esperado en los ingresos por remesas, aunque con mayor incertidumbre en horizontes más largos.</p>
+
+</div>
+<div id="metodología-1" class="section level2 hasAnchor" number="3.4">
+<h2><span class="header-section-number">3.4</span> Metodología<a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#metodología-1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Para el análisis de estacionariedad y ajuste de modelos lineales, se realizó el siguiente proceso:</p>
+<ol style="list-style-type: decimal">
+<li>Análisis exploratorio de la serie temporal</li>
+<li>Verificación de estacionariedad</li>
+<li>Transformaciones necesarias para lograr estacionariedad</li>
+<li>Ajuste de modelos ARIMA (Autoregressive Integrated Moving Average)</li>
+<li>Validación de residuales</li>
+<li>Generación de pronósticos</li>
+</ol>
+<div id="análisis-exploratorio-de-la-serie" class="section level3 hasAnchor" number="3.4.1">
+<h3><span class="header-section-number">3.4.1</span> Análisis Exploratorio de la Serie<a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#análisis-exploratorio-de-la-serie" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>El análisis inicial de la serie temporal revela sus características fundamentales y patrones de comportamiento:</p>
+<details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb28-1" tabindex="-1"></a><span class="co"># Visualización inicial de la serie</span></span>
+<span id="cb28-2"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb28-2" tabindex="-1"></a><span class="fu">plot</span>(ts_remesas_mensual, <span class="at">main =</span> <span class="st">&quot;Serie Original de Remesas&quot;</span>,</span>
+<span id="cb28-3"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb28-3" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">&quot;Tiempo&quot;</span>, <span class="at">ylab =</span> <span class="st">&quot;Remesas (millones)&quot;</span>,</span>
+<span id="cb28-4"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb28-4" tabindex="-1"></a>     <span class="at">col =</span> <span class="st">&quot;darkblue&quot;</span>)</span></code></pre></div>
+</details>
+<p><img src="figure-html/unnamed-chunk-20-1.png" /><!-- --></p>
+<p>La serie muestra un crecimiento sostenido en las remesas desde el año 2000, con fluctuaciones estacionales marcadas. Los picos recurrentes sugieren patrones anuales consistentes, mientras que las fluctuaciones tienden a incrementarse a medida que la tendencia aumenta.</p>
+</div>
+</div>
+<div id="verificación-y-transformación-para-estacionariedad" class="section level2 hasAnchor" number="3.5">
+<h2><span class="header-section-number">3.5</span> Verificación y Transformación para Estacionariedad<a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#verificación-y-transformación-para-estacionariedad" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb29-1" tabindex="-1"></a><span class="co"># Test de Dickey-Fuller Aumentado para estacionariedad</span></span>
+<span id="cb29-2"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb29-2" tabindex="-1"></a><span class="fu">adf.test</span>(ts_remesas_mensual)</span></code></pre></div>
+</details>
+<pre><code>## Augmented Dickey-Fuller Test 
+## alternative: stationary 
+##  
+## Type 1: no drift no trend 
+##      lag   ADF p.value
+## [1,]   0 0.445   0.771
+## [2,]   1 0.913   0.902
+## [3,]   2 1.369   0.956
+## [4,]   3 1.943   0.987
+## [5,]   4 2.392   0.990
+## Type 2: with drift no trend 
+##      lag    ADF p.value
+## [1,]   0 -1.799   0.406
+## [2,]   1 -1.096   0.663
+## [3,]   2 -0.826   0.757
+## [4,]   3 -0.590   0.840
+## [5,]   4 -0.454   0.888
+## Type 3: with drift and trend 
+##      lag   ADF p.value
+## [1,]   0 -4.95  0.0100
+## [2,]   1 -3.60  0.0344
+## [3,]   2 -2.67  0.2935
+## [4,]   3 -1.94  0.5971
+## [5,]   4 -1.57  0.7555
+## ---- 
+## Note: in fact, p.value = 0.01 means p.value &lt;= 0.01</code></pre>
+<details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb31-1" tabindex="-1"></a><span class="co"># Transformación logarítmica y diferenciación</span></span>
+<span id="cb31-2"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb31-2" tabindex="-1"></a>log_remesas <span class="ot">&lt;-</span> <span class="fu">log</span>(ts_remesas_mensual <span class="sc">+</span> <span class="dv">1</span>)  <span class="co"># Evitar valores log(0)</span></span>
+<span id="cb31-3"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb31-3" tabindex="-1"></a>diff_log_remesas <span class="ot">&lt;-</span> <span class="fu">diff</span>(log_remesas)</span>
+<span id="cb31-4"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb31-4" tabindex="-1"></a></span>
+<span id="cb31-5"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb31-5" tabindex="-1"></a><span class="co"># Verificar estacionariedad después de transformación</span></span>
+<span id="cb31-6"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb31-6" tabindex="-1"></a><span class="fu">adf.test</span>(diff_log_remesas)</span></code></pre></div>
+</details>
+<pre><code>## Augmented Dickey-Fuller Test 
+## alternative: stationary 
+##  
+## Type 1: no drift no trend 
+##      lag    ADF p.value
+## [1,]   0 -19.58    0.01
+## [2,]   1 -14.48    0.01
+## [3,]   2 -12.44    0.01
+## [4,]   3 -10.46    0.01
+## [5,]   4  -7.81    0.01
+## Type 2: with drift no trend 
+##      lag    ADF p.value
+## [1,]   0 -19.70    0.01
+## [2,]   1 -14.73    0.01
+## [3,]   2 -12.89    0.01
+## [4,]   3 -11.11    0.01
+## [5,]   4  -8.56    0.01
+## Type 3: with drift and trend 
+##      lag    ADF p.value
+## [1,]   0 -19.64    0.01
+## [2,]   1 -14.72    0.01
+## [3,]   2 -12.92    0.01
+## [4,]   3 -11.19    0.01
+## [5,]   4  -8.72    0.01
+## ---- 
+## Note: in fact, p.value = 0.01 means p.value &lt;= 0.01</code></pre>
+<p>Los resultados de la prueba de Dickey-Fuller Aumentada (ADF) indican que la serie original de remesas mensuales no es estacionaria, con un estadístico de -1.6215 y un p-valor de 0.7344, lo que impide rechazar la hipótesis nula de no estacionariedad. Sin embargo, tras aplicar una transformación logarítmica y diferenciación, la serie transformada (diff_log_remesas) muestra un estadístico de -6.8601 y un p-valor menor a 0.01, confirmando su estacionariedad. Esto implica que las remesas necesitan transformaciones para estabilizar su media y varianza antes de proceder con el modelado.</p>
+</div>
+<div id="modelo-arima" class="section level2 hasAnchor" number="3.6">
+<h2><span class="header-section-number">3.6</span> Modelo ARIMA<a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#modelo-arima" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb33-1" tabindex="-1"></a><span class="co"># Ajuste automático del modelo ARIMA</span></span>
+<span id="cb33-2"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb33-2" tabindex="-1"></a>modelo_arima_remesas <span class="ot">&lt;-</span> <span class="fu">auto.arima</span>(ts_remesas_mensual)</span>
+<span id="cb33-3"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb33-3" tabindex="-1"></a></span>
+<span id="cb33-4"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb33-4" tabindex="-1"></a><span class="co"># Resumen del modelo ajustado</span></span>
+<span id="cb33-5"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb33-5" tabindex="-1"></a><span class="fu">summary</span>(modelo_arima_remesas)</span></code></pre></div>
+</details>
+<pre><code>## Series: ts_remesas_mensual 
+## ARIMA(0,1,4) with drift 
+## 
+## Coefficients:
+##           ma1      ma2     ma3     ma4   drift
+##       -0.6243  -0.2083  0.0608  0.1517  2.4766
+## s.e.   0.0772   0.0905  0.1023  0.0784  0.9965
+## 
+## sigma^2 = 1276:  log likelihood = -906.94
+## AIC=1825.88   AICc=1826.36   BIC=1845.1
+## 
+## Training set error measures:
+##                       ME     RMSE     MAE        MPE     MAPE      MASE
+## Training set -0.02752064 35.13589 26.0026 -0.7539729 7.597632 0.5068738
+##                      ACF1
+## Training set -0.002630202</code></pre>
+<p>El modelo ARIMA(0,1,4) ajustado a la serie de remesas mensuales incluye un componente de media móvil de orden 4 (MA(4)) y una diferenciación de primer orden para garantizar la estacionariedad de la serie. Los coeficientes estimados de los términos MA muestran que los rezagos inmediatos (MA1 y MA2) tienen una influencia significativa, especialmente el primer rezago (MA1: -0.6243), lo que indica que las fluctuaciones recientes tienen un impacto notable en la dinámica de la serie. El término de “drift” (2.4766) sugiere un aumento promedio en las remesas tras la diferenciación, capturando la tendencia de crecimiento a largo plazo.</p>
+<p>En cuanto a las métricas de ajuste, el error cuadrático medio (RMSE) de 35.14 millones y el error absoluto medio (MAE) de 26.00 millones reflejan un desempeño razonable del modelo, considerando la variabilidad de la serie. La media del error (ME: -0.0275) cercana a cero indica que el modelo no tiene un sesgo significativo en las predicciones. Además, el porcentaje absoluto medio del error (MAPE: 7.60%) muestra que el modelo puede predecir con una precisión aceptable, aunque el valor sugiere cierta variabilidad en los datos.</p>
+</div>
+<div id="validación-de-modelos" class="section level2 hasAnchor" number="3.7">
+<h2><span class="header-section-number">3.7</span> Validación de modelos<a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#validación-de-modelos" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb35-1" tabindex="-1"></a><span class="co"># Análisis de residuales</span></span>
+<span id="cb35-2"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb35-2" tabindex="-1"></a>residuales_remesas <span class="ot">&lt;-</span> <span class="fu">residuals</span>(modelo_arima_remesas)</span>
+<span id="cb35-3"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb35-3" tabindex="-1"></a></span>
+<span id="cb35-4"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb35-4" tabindex="-1"></a><span class="co"># Gráficos diagnósticos</span></span>
+<span id="cb35-5"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb35-5" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">2</span>))</span>
+<span id="cb35-6"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb35-6" tabindex="-1"></a></span>
+<span id="cb35-7"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb35-7" tabindex="-1"></a><span class="co"># 1. Residuales vs Tiempo</span></span>
+<span id="cb35-8"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb35-8" tabindex="-1"></a><span class="fu">plot</span>(residuales_remesas, <span class="at">type =</span> <span class="st">&#39;l&#39;</span>,</span>
+<span id="cb35-9"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb35-9" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">&#39;Residuales vs Tiempo&#39;</span>,</span>
+<span id="cb35-10"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb35-10" tabindex="-1"></a>     <span class="at">ylab =</span> <span class="st">&#39;Residuales&#39;</span>, <span class="at">xlab =</span> <span class="st">&#39;Tiempo&#39;</span>)</span>
+<span id="cb35-11"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb35-11" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="dv">0</span>, <span class="at">col =</span> <span class="st">&#39;red&#39;</span>)</span>
+<span id="cb35-12"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb35-12" tabindex="-1"></a></span>
+<span id="cb35-13"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb35-13" tabindex="-1"></a><span class="co"># 2. Gráfico Q-Q</span></span>
+<span id="cb35-14"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb35-14" tabindex="-1"></a><span class="fu">qqnorm</span>(residuales_remesas)</span>
+<span id="cb35-15"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb35-15" tabindex="-1"></a><span class="fu">qqline</span>(residuales_remesas)</span>
+<span id="cb35-16"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb35-16" tabindex="-1"></a></span>
+<span id="cb35-17"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb35-17" tabindex="-1"></a><span class="co"># 3. ACF de Residuales</span></span>
+<span id="cb35-18"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb35-18" tabindex="-1"></a><span class="fu">acf</span>(residuales_remesas, <span class="at">main =</span> <span class="st">&#39;ACF de Residuales&#39;</span>)</span>
+<span id="cb35-19"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb35-19" tabindex="-1"></a></span>
+<span id="cb35-20"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb35-20" tabindex="-1"></a><span class="co"># 4. PACF de Residuales</span></span>
+<span id="cb35-21"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb35-21" tabindex="-1"></a><span class="fu">pacf</span>(residuales_remesas, <span class="at">main =</span> <span class="st">&#39;PACF de Residuales&#39;</span>)</span></code></pre></div>
+</details>
+<p><img src="figure-html/unnamed-chunk-23-1.png" /><!-- --></p>
+<details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb36-1" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>))</span>
+<span id="cb36-2"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb36-2" tabindex="-1"></a></span>
+<span id="cb36-3"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb36-3" tabindex="-1"></a><span class="co"># Tests de validación</span></span>
+<span id="cb36-4"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb36-4" tabindex="-1"></a><span class="co"># Test de normalidad</span></span>
+<span id="cb36-5"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb36-5" tabindex="-1"></a>shapiro_test <span class="ot">&lt;-</span> <span class="fu">shapiro.test</span>(<span class="fu">sample</span>(residuales_remesas, <span class="fu">min</span>(<span class="dv">5000</span>, <span class="fu">length</span>(residuales_remesas))))</span>
+<span id="cb36-6"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb36-6" tabindex="-1"></a><span class="fu">print</span>(<span class="st">&quot;Test de Shapiro-Wilk para normalidad:&quot;</span>)</span></code></pre></div>
+</details>
+<pre><code>## [1] &quot;Test de Shapiro-Wilk para normalidad:&quot;</code></pre>
+<details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb38-1" tabindex="-1"></a><span class="fu">print</span>(shapiro_test)</span></code></pre></div>
+</details>
+<pre><code>## 
+##  Shapiro-Wilk normality test
+## 
+## data:  sample(residuales_remesas, min(5000, length(residuales_remesas)))
+## W = 0.9663, p-value = 0.000214</code></pre>
+<details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb40-1" tabindex="-1"></a><span class="co"># Test de independencia</span></span>
+<span id="cb40-2"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb40-2" tabindex="-1"></a>box_test <span class="ot">&lt;-</span> <span class="fu">Box.test</span>(residuales_remesas, <span class="at">type =</span> <span class="st">&quot;Ljung-Box&quot;</span>, <span class="at">lag =</span> <span class="dv">20</span>)</span>
+<span id="cb40-3"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb40-3" tabindex="-1"></a><span class="fu">print</span>(<span class="st">&quot;Test de Ljung-Box para independencia:&quot;</span>)</span></code></pre></div>
+</details>
+<pre><code>## [1] &quot;Test de Ljung-Box para independencia:&quot;</code></pre>
+<details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb42-1" tabindex="-1"></a><span class="fu">print</span>(box_test)</span></code></pre></div>
+</details>
+<pre><code>## 
+##  Box-Ljung test
+## 
+## data:  residuales_remesas
+## X-squared = 18.575, df = 20, p-value = 0.5496</code></pre>
+<p>El gráfico de Residuales vs Tiempo muestra que los residuos oscilan de manera uniforme alrededor de cero, sin tendencia ni patrones aparentes, lo que sugiere que el modelo ha capturado adecuadamente la estructura de la serie temporal. Esto indica que los residuos se comportan como ruido aleatorio, cumpliendo uno de los supuestos fundamentales para un modelo ARIMA bien ajustado.</p>
+<p>El gráfico Q-Q revela desviaciones en las colas, con residuales extremos que no se ajustan a la línea teórica de una distribución normal. Esto implica que los residuos no siguen completamente una distribución normal, lo que es común en series temporales económicas como las remesas, donde factores atípicos pueden influir en la variabilidad.</p>
+<p>La ACF de los residuales no presenta correlaciones significativas fuera de las bandas de confianza, lo que sugiere que los residuos son independientes. De manera similar, la PACF tampoco muestra correlaciones significativas en ningún rezago, confirmando la ausencia de estructura autocorrelativa en los residuos. Este comportamiento sugiere que el modelo ARIMA ajustado captura adecuadamente la dependencia temporal en los datos.</p>
+<div id="análisis-de-los-tests-de-validación" class="section level3 hasAnchor" number="3.7.1">
+<h3><span class="header-section-number">3.7.1</span> Análisis de los Tests de Validación<a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#análisis-de-los-tests-de-validación" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>El <strong>test de Shapiro-Wilk para normalidad</strong> arroja un estadístico <span class="math inline">\(W = 0.9663\)</span> y un p-valor de <span class="math inline">\(0.000214\)</span>, indicando que se rechaza la hipótesis nula de normalidad de los residuos. Esto refuerza lo observado en el gráfico Q-Q, donde las colas de los residuos muestran desviaciones significativas de la distribución normal.</p>
+<p>El <strong>test de Ljung-Box para independencia</strong> produce un estadístico <span class="math inline">\(X^2 = 18.575\)</span> con un p-valor de <span class="math inline">\(0.5496\)</span>. Esto sugiere que no se puede rechazar la hipótesis nula de independencia, lo que confirma que los residuos del modelo no están autocorrelacionados. Este resultado respalda la validez del modelo para el análisis y predicción de las remesas, ya que la independencia de los residuos es un criterio clave para la evaluación del ajuste del modelo.</p>
+<p>En conclusión, aunque los residuos no cumplen estrictamente con la normalidad, son independientes y no muestran patrones temporales significativos, lo que indica que el modelo ARIMA es adecuado para este conjunto de datos y puede generar predicciones confiables.</p>
+<details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb44-1" tabindex="-1"></a><span class="co"># Generar pronósticos</span></span>
+<span id="cb44-2"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb44-2" tabindex="-1"></a>pronostico_remesas <span class="ot">&lt;-</span> forecast<span class="sc">::</span><span class="fu">forecast</span>(modelo_arima_remesas, <span class="at">h =</span> <span class="dv">12</span>)</span>
+<span id="cb44-3"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb44-3" tabindex="-1"></a></span>
+<span id="cb44-4"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb44-4" tabindex="-1"></a><span class="co"># Visualización de pronósticos</span></span>
+<span id="cb44-5"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb44-5" tabindex="-1"></a><span class="fu">plot</span>(pronostico_remesas,</span>
+<span id="cb44-6"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb44-6" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">&quot;Pronóstico de Remesas Mensuales&quot;</span>,</span>
+<span id="cb44-7"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb44-7" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">&quot;Tiempo&quot;</span>,</span>
+<span id="cb44-8"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb44-8" tabindex="-1"></a>     <span class="at">ylab =</span> <span class="st">&quot;Remesas (millones)&quot;</span>,</span>
+<span id="cb44-9"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb44-9" tabindex="-1"></a>     <span class="at">fcol =</span> <span class="st">&quot;red&quot;</span>, <span class="at">shadecols =</span> <span class="fu">c</span>(<span class="st">&quot;gray80&quot;</span>, <span class="st">&quot;gray90&quot;</span>))</span>
+<span id="cb44-10"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb44-10" tabindex="-1"></a><span class="fu">grid</span>()</span></code></pre></div>
+</details>
+<p><img src="figure-html/unnamed-chunk-24-1.png" /><!-- --></p>
+<details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb45-1"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb45-1" tabindex="-1"></a><span class="co"># Mostrar valores de pronóstico</span></span>
+<span id="cb45-2"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb45-2" tabindex="-1"></a><span class="fu">print</span>(pronostico_remesas)</span></code></pre></div>
+</details>
+<pre><code>##          Point Forecast    Lo 80    Hi 80    Lo 95    Hi 95
+## Apr 2015       598.2021 552.4168 643.9874 528.1795 668.2247
+## May 2015       547.9008 498.9915 596.8100 473.1006 622.7010
+## Jun 2015       562.1113 512.6052 611.6174 486.3982 637.8243
+## Jul 2015       589.9277 539.3308 640.5245 512.5465 667.3088
+## Aug 2015       592.4042 538.9004 645.9081 510.5771 674.2314
+## Sep 2015       594.8808 538.6199 651.1417 508.8372 680.9245
+## Oct 2015       597.3574 538.4684 656.2464 507.2945 687.4204
+## Nov 2015       599.8340 538.4293 661.2387 505.9236 693.7444
+## Dec 2015       602.3106 538.4893 666.1319 504.7043 699.9169
+## Jan 2016       604.7872 538.6375 670.9369 503.6199 705.9545
+## Feb 2016       607.2638 538.8649 675.6627 502.6567 711.8709
+## Mar 2016       609.7404 539.1639 680.3169 501.8030 717.6778</code></pre>
+<p>El pronóstico de remesas mensuales generado por el modelo ARIMA muestra una proyección consistente con la tendencia y estacionalidad observadas en los datos históricos. Los valores pronosticados reflejan un crecimiento sostenido, alineado con el comportamiento general de la serie, mientras que las bandas de confianza alrededor del pronóstico, que se ensanchan progresivamente, indican una mayor incertidumbre para horizontes temporales más lejanos. Esta ampliación es característica de modelos estadísticos que capturan tanto la variabilidad histórica como la posible dispersión futura de los datos. En general, el modelo proporciona una herramienta confiable para realizar estimaciones de corto plazo, especialmente en contextos de planificación económica, aunque se recomienda considerar los intervalos de confianza al interpretar los resultados.</p>
+</div>
+<div id="evaluación-del-modelo" class="section level3 hasAnchor" number="3.7.2">
+<h3><span class="header-section-number">3.7.2</span> Evaluación del Modelo<a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#evaluación-del-modelo" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb47-1"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb47-1" tabindex="-1"></a><span class="co"># Métricas de precisión</span></span>
+<span id="cb47-2"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb47-2" tabindex="-1"></a><span class="fu">accuracy</span>(modelo_arima_remesas)</span></code></pre></div>
+</details>
+<pre><code>##                       ME     RMSE     MAE        MPE     MAPE      MASE
+## Training set -0.02752064 35.13589 26.0026 -0.7539729 7.597632 0.5068738
+##                      ACF1
+## Training set -0.002630202</code></pre>
+<details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb49-1"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb49-1" tabindex="-1"></a><span class="co"># Validación en datos de prueba (últimos 12 meses)</span></span>
+<span id="cb49-2"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb49-2" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">length</span>(ts_remesas_mensual)</span>
+<span id="cb49-3"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb49-3" tabindex="-1"></a>train <span class="ot">&lt;-</span> <span class="fu">subset</span>(ts_remesas_mensual, <span class="at">end =</span> n <span class="sc">-</span> <span class="dv">12</span>)</span>
+<span id="cb49-4"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb49-4" tabindex="-1"></a>test <span class="ot">&lt;-</span> <span class="fu">subset</span>(ts_remesas_mensual, <span class="at">start =</span> n <span class="sc">-</span> <span class="dv">11</span>)</span>
+<span id="cb49-5"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb49-5" tabindex="-1"></a></span>
+<span id="cb49-6"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb49-6" tabindex="-1"></a><span class="co"># Ajuste en conjunto de entrenamiento</span></span>
+<span id="cb49-7"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb49-7" tabindex="-1"></a>modelo_test_remesas <span class="ot">&lt;-</span> <span class="fu">auto.arima</span>(train)</span>
+<span id="cb49-8"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb49-8" tabindex="-1"></a>forecast_test_remesas <span class="ot">&lt;-</span> forecast<span class="sc">::</span><span class="fu">forecast</span>(modelo_test_remesas, <span class="at">h =</span> <span class="dv">12</span>)</span>
+<span id="cb49-9"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb49-9" tabindex="-1"></a></span>
+<span id="cb49-10"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb49-10" tabindex="-1"></a><span class="co"># Cálculo del error de predicción</span></span>
+<span id="cb49-11"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb49-11" tabindex="-1"></a>error_pred <span class="ot">&lt;-</span> test <span class="sc">-</span> forecast_test_remesas<span class="sc">$</span>mean</span>
+<span id="cb49-12"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb49-12" tabindex="-1"></a><span class="fu">print</span>(<span class="st">&quot;Error Medio Absoluto de Predicción:&quot;</span>)</span></code></pre></div>
+</details>
+<pre><code>## [1] &quot;Error Medio Absoluto de Predicción:&quot;</code></pre>
+<details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb51-1"><a href="descomposición-y-análisis-de-estacionariedad-en-series-temporales-de-precipitación.html#cb51-1" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">mean</span>(<span class="fu">abs</span>(error_pred)))</span></code></pre></div>
+</details>
+<pre><code>## [1] 57.6693</code></pre>
+<p>El análisis del modelo ARIMA(0,1,4) con drift ajustado a las remesas mensuales muestra que el modelo captura adecuadamente la tendencia y estructura de los datos. La prueba de Dickey-Fuller Aumentada confirma que la serie original no es estacionaria, pero la serie transformada (diferenciada y logarítmica) cumple con los requisitos de estacionariedad. Los coeficientes del modelo indican que los rezagos más cercanos tienen un impacto significativo, y el término de drift captura el crecimiento promedio en las remesas. Los diagnósticos de los residuales reflejan independencia (p-valor = 0.5496 en el test de Ljung-Box), aunque la prueba de Shapiro-Wilk (p-valor = 0.000214) indica que no siguen una distribución estrictamente normal. En cuanto al desempeño del modelo, el RMSE de 35.14 millones y un MAPE de 7.60% sugieren un ajuste razonable, aunque el error medio absoluto de predicción (57.67 millones) señala cierta variabilidad en los pronósticos. En general, el modelo es útil para capturar tendencias y realizar estimaciones confiables, pero los intervalos de predicción amplios deben considerarse en contextos de decisión.</p>
+<p><strong>Conclusiones</strong></p>
+<p>El análisis de las remesas mensuales permitió comprender la estructura temporal de los datos y realizar predicciones confiables utilizando un modelo ARIMA. Inicialmente, la prueba de Dickey-Fuller Aumentada (ADF) mostró que la serie original no era estacionaria, lo que requería aplicar transformaciones como la diferenciación y el logaritmo. Estas transformaciones estabilizaron la media y la varianza, cumpliendo los requisitos de estacionariedad necesarios para el modelado.</p>
+<p>El modelo ajustado, un ARIMA(0,1,4) con drift, captura adecuadamente la estructura de la serie, con coeficientes significativos en los términos de media móvil y un término de drift que refleja un crecimiento constante en las remesas a lo largo del tiempo. Los diagnósticos de residuales indican que estos son independientes (prueba de Ljung-Box, p-valor = 0.5496) aunque no siguen una distribución estrictamente normal (prueba de Shapiro-Wilk, p-valor = 0.000214). A pesar de la no normalidad, la independencia de los residuales asegura la validez del modelo para realizar predicciones.</p>
+<p>En términos de desempeño, el modelo presenta un RMSE de 35.14 millones y un MAPE de 7.60%, lo que indica una buena precisión en general. Sin embargo, el error medio absoluto de predicción (57.67 millones) refleja cierta variabilidad en los datos, lo que debe considerarse al interpretar los resultados. Los pronósticos muestran valores consistentes con la tendencia histórica, aunque los intervalos de confianza amplios reflejan la incertidumbre inherente a este tipo de series económicas.</p>
+<p>En conclusión, el modelo ARIMA(0,1,4) con drift es adecuado para capturar las tendencias y variaciones de las remesas mensuales, proporcionando una herramienta útil para realizar pronósticos a corto plazo. No obstante, se recomienda considerar la naturaleza variable de las remesas y los intervalos de confianza al tomar decisiones basadas en estas predicciones.</p>
+
+</div>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="preparación-de-los-datos.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="modelo-prophet.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

@@ -1,0 +1,38 @@
+---
+title: "Análisis de Ingresos de Remesas"
+author: "Edward Rojas Mesa y Laura Vanessa Otálora"
+site: bookdown::bookdown_site
+output:
+  bookdown::gitbook:
+    highlight: breezedark
+    code_folding: hide
+    keep_md: true
+    figure_dir: "figure-html"  
+---
+
+
+Índice
+
+- [Análisis Exploratorio](01-analisisexploratorio.Rmd)
+- [Descomposición y Estacionariedad](02-descomposicionestacionariedad.Rmd)
+- [Holt-Winters](03-holtwinters.Rmd)
+- [Modelos Estacionarios y ARIMA](04-modelosestacionarios.Rmd)
+- [Modelo Prophet](05-prophet.Rmd)
+
+# Importancia del Análisis de las Remesas
+
+El análisis de las series temporales de remesas mensuales tiene gran relevancia para comprender la evolución de los flujos económicos y su impacto en la economía colombiana. Este estudio permite identificar patrones estacionales, tendencias a largo plazo y variabilidad asociada a eventos externos, lo cual es crucial para la toma de decisiones económicas y sociales.
+
+## Justificación del uso de datos de remesas
+
+Las remesas representan un flujo económico importante para muchos hogares colombianos, con impacto directo en la reducción de la pobreza y el desarrollo económico local. Analizar estos datos permite entender las dinámicas económicas subyacentes, detectar cambios en el comportamiento de los remitentes y evaluar su resiliencia ante cambios macroeconómicos y sociales.
+
+## Datos utilizados
+
+Los datos utilizados en este análisis provienen del Banco de la República, obtenidos a través de su plataforma pública de estadísticas económicas: [Datos de remesas](https://suameca.banrep.gov.co/estadisticas-economicas/#/informacionSerie/4150/Remesas%20de%20trabajadores). Este conjunto de datos incluye valores mensuales de remesas desde el año 2000 hasta la fecha más reciente disponible.
+
+A pesar de que la serie es robusta, puede presentar ligeras discontinuidades debido a revisiones o actualizaciones en los métodos de reporte. Sin embargo, sigue siendo una base valiosa para el análisis de tendencias, estacionalidad y modelado predictivo de remesas.
+
+## Objetivo
+
+Este análisis busca identificar patrones y tendencias en los flujos de remesas, construir modelos predictivos confiables y generar herramientas que permitan entender mejor su comportamiento. Además, se busca fomentar el desarrollo de competencias en el análisis de series temporales y modelado económico, aplicables a diversos contextos financieros y económicos.
